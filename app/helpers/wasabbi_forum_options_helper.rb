@@ -1,0 +1,2 @@
+module WasabbiForumOptionsHelper
+end

@@ -1,15 +1,19 @@
 class CreateForumOptions < ActiveRecord::Migration
   def self.up
-    create_table :forum_options do |t|
-      t.string :name
-      t.string :value
-      t.integer :forum_id, :deferrable => true
+    ActiveRecord::Base.transaction do
+      create_table :wasabbi_forum_options do |t|
+        t.string :name
+        t.string :value
+        t.integer :wasabbi_forum_id, :deferrable => true
 
-      t.timestamps
+        t.timestamps
+      end
     end
   end
 
   def self.down
-    drop_table :forum_options
+    ActiveRecord::Base.transaction do
+      drop_table :wasabbi_forum_options
+    end
   end
 end

@@ -1,7 +1,7 @@
 class CreateForumCategories < ActiveRecord::Migration
   def self.up
     ActiveRecord::Base.transaction do
-      create_table :forum_categories do |t|
+      create_table :wasabbi_forum_categories do |t|
         t.string :name
         t.string :description
         t.integer :position
@@ -13,7 +13,7 @@ class CreateForumCategories < ActiveRecord::Migration
 
   def self.down
     ActiveRecord::Base.transaction do
-      drop_table :forum_categories
+      drop_table :wasabbi_forum_categories
     end
   end
 end

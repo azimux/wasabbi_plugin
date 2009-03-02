@@ -1,6 +1,6 @@
-<h1>Editing forum</h1>
+<h1>Editing wasabbi_forum</h1>
 
-<% form_for(@forum) do |f| %>
+<% form_for(@wasabbi_forum) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -16,13 +16,13 @@
     <%= f.text_field :parent_id %>
   </p>
   <p>
-    <%= f.label :forum_category_id %><br />
-    <%= f.text_field :forum_category_id %>
+    <%= f.label :wasabbi_forum_category_id %><br />
+    <%= f.text_field :wasabbi_forum_category_id %>
   </p>
   <p>
     <%= f.submit "Update" %>
   </p>
 <% end %>
 
-<%= link_to 'Show', @forum %> |
-<%= link_to 'Back', forums_path %>
+<%= link_to 'Show', @wasabbi_forum %> |
+<%= link_to 'Back', wasabbi_forums_path %>

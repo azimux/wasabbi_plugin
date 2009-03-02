@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @wasabbi_forum_category.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @wasabbi_forum_category.description %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @wasabbi_forum_category.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_wasabbi_forum_category_path(@wasabbi_forum_category) %> |
+<%= link_to 'Back', wasabbi_forum_categories_path %>
