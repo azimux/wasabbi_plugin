@@ -13,7 +13,7 @@ class AddWasabbiPrefixes < ActiveRecord::Migration
         end
       end
       
-      conn.reconnect!
+      #conn.reconnect!
       
       diff = conn.tables & to_fix
       
@@ -22,7 +22,8 @@ class AddWasabbiPrefixes < ActiveRecord::Migration
   end
 
   def self.down
-    #XXX raise "no turning back!"
+    raise "no turning back!"
+    
     ActiveRecord::Base.transaction do
       conn = ActiveRecord::Base.connection
       to_fix.each do |t|
