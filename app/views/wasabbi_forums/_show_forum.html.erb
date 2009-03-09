@@ -1,0 +1,3 @@
+<% forum.children.each do |cat| %>
+  <% render :partial => "show_category", :locals => {:category => cat}  %>
+<% end %>
