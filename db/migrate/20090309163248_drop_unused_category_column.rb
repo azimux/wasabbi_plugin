@@ -10,8 +10,6 @@ class DropUnusedCategoryColumn < ActiveRecord::Migration
   end
 
   def self.down
-    ActiveRecord::Base.transaction do
-      CreateForumCategories.up
-    end
+    CreateForumCategories.up
   end
 end

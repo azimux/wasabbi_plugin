@@ -1,0 +1,2 @@
+module WasabbiForumStringOptionsHelper
+end

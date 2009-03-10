@@ -9,7 +9,7 @@ class WasabbiForum < ActiveRecord::Base
       :foreign_key => "#{top}_id"
   end
 
-  has_string_hash :wasabbi_forum_options
+  has_hash :wasabbi_forum_string_options
 
   def subcategories
     children.select {|child| child.is_category}

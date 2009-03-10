@@ -1,9 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :wasabbi_forum_options
+  map.resources :wasabbi_forum_string_options
 
   map.resources :wasabbi_forums
-
-  map.resources :wasabbi_forum_categories
 
   # The priority is based upon order of creation: first created -> highest priority.
 

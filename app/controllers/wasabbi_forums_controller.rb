@@ -78,7 +78,7 @@ class WasabbiForumsController < ApplicationController
     WasabbiForum.transaction do
       @wasabbi_forum = WasabbiForum.find(params[:id])
 
-      @wasabbi_forum.forum_options.clear
+      @wasabbi_forum.wasabbi_forum_string_options.clear
       @wasabbi_forum.destroy
     end
 
