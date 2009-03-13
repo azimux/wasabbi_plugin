@@ -1,0 +1,2 @@
+class WasabbiPostsController < ApplicationController
+end

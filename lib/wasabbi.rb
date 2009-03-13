@@ -12,4 +12,6 @@ class Wasabbi
   def self.wasabbi_root
     File.join(File.dirname(__FILE__), '..')
   end
+  
+  cattr_accessor :user_class
 end

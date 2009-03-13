@@ -1,4 +1,7 @@
 class WasabbiForum < ActiveRecord::Base
+  has_many :threads, :through => :thread_list_entries
+  has_one :thread_list_entry
+    
   cols = [:parent, :child]
 
   [cols,cols.reverse].each do |top,bot|

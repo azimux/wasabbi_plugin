@@ -1,0 +1,2 @@
+class WasabbiThreadsController < ApplicationController
+end
