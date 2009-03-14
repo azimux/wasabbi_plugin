@@ -1,7 +1,9 @@
 class WasabbiForum < ActiveRecord::Base
   has_many :threads, :through => :thread_list_entries
-  has_many :thread_list_entries #, :class_name => :wasabbi_thread_list_entries
+  has_many :thread_list_entries, :class_name => "WasabbiThreadListEntry",
+    :foreign_key => "forum_id"
     
+
   cols = [:parent, :child]
 
   [cols,cols.reverse].each do |top,bot|
