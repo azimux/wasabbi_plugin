@@ -1,7 +1,6 @@
 class WasabbiForum < ActiveRecord::Base
   has_many :threads, :through => :thread_list_entries
-  has_many :thread_list_entries, :table_name => :wasabbi_thread_list_entries
-  #XXX
+  has_many :thread_list_entries #, :class_name => :wasabbi_thread_list_entries
     
   cols = [:parent, :child]
 

@@ -1,3 +1,3 @@
 class WasabbiForumStringOption < ActiveRecord::Base
-  belongs_to :wasabbi_forum
+  belongs_to :forum, :class_name => "WasabbiForum"
 end

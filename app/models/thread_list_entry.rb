@@ -3,6 +3,6 @@ class ThreadListEntry < ActiveRecord::Base
   
   acts_as_list :scope => :thread
   
-  belongs_to :wasabbi_thread
-  belongs_to :wasabbi_forum
+  belongs_to :thread, :class_name => "WasabbiThread"
+  belongs_to :forum, :class_name => "WasabbiForum"
 end
