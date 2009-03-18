@@ -1,0 +1,43 @@
+<p>
+  <b>Thread:</b>
+  <%=h @wasabbi_post.thread_id %>
+</p>
+
+<p>
+  <b>Old thread:</b>
+  <%=h @wasabbi_post.old_thread_id %>
+</p>
+
+<p>
+  <b>Wasabbi user:</b>
+  <%=h @wasabbi_post.wasabbi_user_id %>
+</p>
+
+<p>
+  <b>Modified by:</b>
+  <%=h @wasabbi_post.modified_by_id %>
+</p>
+
+<p>
+  <b>Modifications:</b>
+  <%=h @wasabbi_post.modifications %>
+</p>
+
+<p>
+  <b>Is deleted:</b>
+  <%=h @wasabbi_post.is_deleted %>
+</p>
+
+<p>
+  <b>Subject:</b>
+  <%=h @wasabbi_post.subject %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @wasabbi_post.body %>
+</p>
+
+
+<%= link_to 'Edit', edit_wasabbi_post_path(@wasabbi_post) %> |
+<%= link_to 'Back', wasabbi_posts_path %>

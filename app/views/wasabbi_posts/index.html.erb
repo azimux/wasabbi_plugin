@@ -1,0 +1,34 @@
+<h1>Listing wasabbi_posts</h1>
+
+<table>
+  <tr>
+    <th>Thread</th>
+    <th>Old thread</th>
+    <th>Wasabbi user</th>
+    <th>Modified by</th>
+    <th>Modifications</th>
+    <th>Is deleted</th>
+    <th>Subject</th>
+    <th>Body</th>
+  </tr>
+
+<% for wasabbi_post in @wasabbi_posts %>
+  <tr>
+    <td><%=h wasabbi_post.thread_id %></td>
+    <td><%=h wasabbi_post.old_thread_id %></td>
+    <td><%=h wasabbi_post.wasabbi_user_id %></td>
+    <td><%=h wasabbi_post.modified_by_id %></td>
+    <td><%=h wasabbi_post.modifications %></td>
+    <td><%=h wasabbi_post.is_deleted %></td>
+    <td><%=h wasabbi_post.subject %></td>
+    <td><%=h wasabbi_post.body %></td>
+    <td><%= link_to 'Show', wasabbi_post %></td>
+    <td><%= link_to 'Edit', edit_wasabbi_post_path(wasabbi_post) %></td>
+    <td><%= link_to 'Destroy', wasabbi_post, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New wasabbi_post', new_wasabbi_post_path %>
