@@ -1,0 +1,23 @@
+<p>
+  <b>Wasabbi user:</b>
+  <%=h @wasabbi_modship.wasabbi_user_id %>
+</p>
+
+<p>
+  <b>Is super mod:</b>
+  <%=h @wasabbi_modship.is_super_mod %>
+</p>
+
+<p>
+  <b>Forum:</b>
+  <%=h @wasabbi_modship.forum_id %>
+</p>
+
+<p>
+  <b>Is subforum mod:</b>
+  <%=h @wasabbi_modship.is_subforum_mod %>
+</p>
+
+
+<%= link_to 'Edit', edit_wasabbi_modship_path(@wasabbi_modship) %> |
+<%= link_to 'Back', wasabbi_modships_path %>
