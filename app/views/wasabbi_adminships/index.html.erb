@@ -1,0 +1,26 @@
+<h1>Listing wasabbi_adminships</h1>
+
+<table>
+  <tr>
+    <th>Wasabbi user</th>
+    <th>Is super admin</th>
+    <th>Forum</th>
+    <th>Is subforum admin</th>
+  </tr>
+
+<% for wasabbi_adminship in @wasabbi_adminships %>
+  <tr>
+    <td><%=h wasabbi_adminship.wasabbi_user_id %></td>
+    <td><%=h wasabbi_adminship.is_super_admin %></td>
+    <td><%=h wasabbi_adminship.forum_id %></td>
+    <td><%=h wasabbi_adminship.is_subforum_admin %></td>
+    <td><%= link_to 'Show', wasabbi_adminship %></td>
+    <td><%= link_to 'Edit', edit_wasabbi_adminship_path(wasabbi_adminship) %></td>
+    <td><%= link_to 'Destroy', wasabbi_adminship, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New wasabbi_adminship', new_wasabbi_adminship_path %>

@@ -1,0 +1,23 @@
+<p>
+  <b>Wasabbi user:</b>
+  <%=h @wasabbi_adminship.wasabbi_user_id %>
+</p>
+
+<p>
+  <b>Is super admin:</b>
+  <%=h @wasabbi_adminship.is_super_admin %>
+</p>
+
+<p>
+  <b>Forum:</b>
+  <%=h @wasabbi_adminship.forum_id %>
+</p>
+
+<p>
+  <b>Is subforum admin:</b>
+  <%=h @wasabbi_adminship.is_subforum_admin %>
+</p>
+
+
+<%= link_to 'Edit', edit_wasabbi_adminship_path(@wasabbi_adminship) %> |
+<%= link_to 'Back', wasabbi_adminships_path %>
