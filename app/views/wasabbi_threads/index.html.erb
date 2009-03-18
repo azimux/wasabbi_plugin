@@ -1,0 +1,34 @@
+<h1>Listing wasabbi_threads</h1>
+
+<table>
+  <tr>
+    <th>Wasabbi user</th>
+    <th>Subject</th>
+    <th>Views</th>
+    <th>Replies</th>
+    <th>Is locked</th>
+    <th>Is deleted</th>
+    <th>Modified by</th>
+    <th>Body</th>
+  </tr>
+
+<% for wasabbi_thread in @wasabbi_threads %>
+  <tr>
+    <td><%=h wasabbi_thread.wasabbi_user_id %></td>
+    <td><%=h wasabbi_thread.subject %></td>
+    <td><%=h wasabbi_thread.views %></td>
+    <td><%=h wasabbi_thread.replies %></td>
+    <td><%=h wasabbi_thread.is_locked %></td>
+    <td><%=h wasabbi_thread.is_deleted %></td>
+    <td><%=h wasabbi_thread.modified_by_id %></td>
+    <td><%=h wasabbi_thread.body %></td>
+    <td><%= link_to 'Show', wasabbi_thread %></td>
+    <td><%= link_to 'Edit', edit_wasabbi_thread_path(wasabbi_thread) %></td>
+    <td><%= link_to 'Destroy', wasabbi_thread, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New wasabbi_thread', new_wasabbi_thread_path %>

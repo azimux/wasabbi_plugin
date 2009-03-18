@@ -1,0 +1,43 @@
+<h1>New wasabbi_thread</h1>
+
+<% form_for(@wasabbi_thread) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :wasabbi_user_id %><br />
+    <%= f.text_field :wasabbi_user_id %>
+  </p>
+  <p>
+    <%= f.label :subject %><br />
+    <%= f.text_area :subject %>
+  </p>
+  <p>
+    <%= f.label :views %><br />
+    <%= f.text_field :views %>
+  </p>
+  <p>
+    <%= f.label :replies %><br />
+    <%= f.text_field :replies %>
+  </p>
+  <p>
+    <%= f.label :is_locked %><br />
+    <%= f.check_box :is_locked %>
+  </p>
+  <p>
+    <%= f.label :is_deleted %><br />
+    <%= f.check_box :is_deleted %>
+  </p>
+  <p>
+    <%= f.label :modified_by_id %><br />
+    <%= f.text_field :modified_by_id %>
+  </p>
+  <p>
+    <%= f.label :body %><br />
+    <%= f.text_area :body %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', wasabbi_threads_path %>

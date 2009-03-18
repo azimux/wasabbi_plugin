@@ -1,0 +1,43 @@
+<p>
+  <b>Wasabbi user:</b>
+  <%=h @wasabbi_thread.wasabbi_user_id %>
+</p>
+
+<p>
+  <b>Subject:</b>
+  <%=h @wasabbi_thread.subject %>
+</p>
+
+<p>
+  <b>Views:</b>
+  <%=h @wasabbi_thread.views %>
+</p>
+
+<p>
+  <b>Replies:</b>
+  <%=h @wasabbi_thread.replies %>
+</p>
+
+<p>
+  <b>Is locked:</b>
+  <%=h @wasabbi_thread.is_locked %>
+</p>
+
+<p>
+  <b>Is deleted:</b>
+  <%=h @wasabbi_thread.is_deleted %>
+</p>
+
+<p>
+  <b>Modified by:</b>
+  <%=h @wasabbi_thread.modified_by_id %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @wasabbi_thread.body %>
+</p>
+
+
+<%= link_to 'Edit', edit_wasabbi_thread_path(@wasabbi_thread) %> |
+<%= link_to 'Back', wasabbi_threads_path %>
