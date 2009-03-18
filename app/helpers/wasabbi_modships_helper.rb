@@ -1,0 +1,2 @@
+module WasabbiModshipsHelper
+end

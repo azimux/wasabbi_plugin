@@ -1,0 +1,2 @@
+class WasabbiModshipsController < ApplicationController
+end

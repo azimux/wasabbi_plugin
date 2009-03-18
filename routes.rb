@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :wasabbi_forums
   map.resources :wasabbi_threads
   map.resources :wasabbi_posts
+  map.resources :wasabbi_adminships
+  map.resources :wasabbi_modships
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

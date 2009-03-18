@@ -1,0 +1,2 @@
+class WasabbiAdminshipsController < ApplicationController
+end
