@@ -75,6 +75,8 @@ class WasabbiThreadsController < ApplicationController
   # DELETE /wasabbi_threads/1.xml
   def destroy
     @wasabbi_thread = WasabbiThread.find(params[:id])
+    @wasabbi_thread.thread_list_entries.each {|tle|tle.destroy}
+    @wasabbi_thread.posts.each {|post| post.destroy}
     @wasabbi_thread.destroy
 
     respond_to do |format|
