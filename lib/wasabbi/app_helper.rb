@@ -51,7 +51,10 @@ class Wasabbi
 
         before_filter options do |controller|
           controller.instance_eval do
-            if !wasabbi_user.admin? params[:forum_id]
+            forum_id = params[:forum_id]
+            forum_id ||= params[:id] if self.class == WasabbiForumsController
+
+            if !wasabbi_user.admin? forum_id
               redirect_to wasabbi_denied_admin_url
             end
           end
