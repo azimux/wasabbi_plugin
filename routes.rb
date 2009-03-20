@@ -5,6 +5,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :wasabbi_posts
   map.resources :wasabbi_adminships
   map.resources :wasabbi_modships
+
+  map.wasabbi_denied_admin "wasabbi_static/denied_admin",
+    :controller => "wasabbi_static", :action => "denied_admin"
+  map.wasabbi_denied_mod "wasabbi_static/denied_admin",
+    :controller => "wasabbi_static", :action => "denied_mod"
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

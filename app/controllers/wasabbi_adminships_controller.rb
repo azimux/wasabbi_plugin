@@ -1,8 +1,15 @@
 class WasabbiAdminshipsController < ApplicationController
+  wasabbi_require_login
+  wasabbi_require_admin
+
   # GET /wasabbi_adminships
   # GET /wasabbi_adminships.xml
   def index
-    @wasabbi_adminships = WasabbiAdminship.find(:all)
+    if params[:forum_id]
+      @wasabbi_adminships = WasabbiAdminship.find_all_by_forum_id(params[:forum_id])
+    else
+      @wasabbi_adminships = WasabbiAdminship.find(:all)
+    end
 
     respond_to do |format|
       format.html # index.html.erb

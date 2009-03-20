@@ -3,7 +3,7 @@ module ApplicationHelper
   def wasabbi_theme_stylesheet
     stylesheet_link_tag Wasabbi.theme.resource_url('stylesheet.css')
   end
-  
+
   def wasabbi_logo
     #XXX
     ""
