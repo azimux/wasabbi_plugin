@@ -1,4 +1,7 @@
 class WasabbiForumStringOptionsController < ApplicationController
+  wasabbi_require_login
+  wasabbi_require_admin
+
   # GET /wasabbi_forum_string_options
   # GET /wasabbi_forum_string_options.xml
   def index
