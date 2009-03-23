@@ -5,31 +5,31 @@ class WasabbiAdminshipsController < ApplicationController
   # GET /wasabbi_adminships
   # GET /wasabbi_adminships.xml
   def index
-     WasabbiAdminship.transaction do
+    WasabbiAdminship.transaction do
       if params[:forum_id]
-      @wasabbi_adminships = WasabbiAdminship.find_all_by_forum_id(params[:forum_id])
-    else
-      @wasabbi_adminships = WasabbiAdminship.find(:all)
-    end
+        @wasabbi_adminships = WasabbiAdminship.find_all_by_forum_id(params[:forum_id])
+      else
+        @wasabbi_adminships = WasabbiAdminship.find(:all)
+      end
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @wasabbi_adminships }
+      respond_to do |format|
+        format.html # index.html.erb
+        format.xml  { render :xml => @wasabbi_adminships }
+      end
     end
-  end
   end
 
   # GET /wasabbi_adminships/1
   # GET /wasabbi_adminships/1.xml
   def show
-     WasabbiAdminship.transaction do
+    WasabbiAdminship.transaction do
       @wasabbi_adminship = WasabbiAdminship.find(params[:id])
 
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @wasabbi_adminship }
+      respond_to do |format|
+        format.html # show.html.erb
+        format.xml  { render :xml => @wasabbi_adminship }
+      end
     end
-  end
   end
 
   # GET /wasabbi_adminships/new
@@ -45,9 +45,9 @@ class WasabbiAdminshipsController < ApplicationController
 
   # GET /wasabbi_adminships/1/edit
   def edit
-     WasabbiAdminship.transaction do
+    WasabbiAdminship.transaction do
       @wasabbi_adminship = WasabbiAdminship.find(params[:id])
-     end
+    end
   end
 
   # POST /wasabbi_adminships
