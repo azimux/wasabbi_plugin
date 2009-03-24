@@ -1,4 +1,9 @@
 class WasabbiPostsController < ApplicationController
+  wasabbi_require_login :if_public => {:except => [:index, :show]}
+  #wasabbi_require_login_if_private :except => [:index, :show]
+  wasabbi_require_mod :except => [:index, :show, :new, :edit, :update, :create]
+  #wasabbi_check_membership #XXX
+
   # GET /wasabbi_posts
   # GET /wasabbi_posts.xml
   def index

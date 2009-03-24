@@ -1,0 +1,2 @@
+module WasabbiGroupsHelper
+end

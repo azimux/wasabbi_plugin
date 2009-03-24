@@ -5,6 +5,12 @@ class WasabbiForum < ActiveRecord::Base
 
   has_many :modships, :class_name => "WasabbiModship", :foreign_key => "forum_id"
   has_many :adminships, :class_name => "WasabbiAdminship", :foreign_key => "forum_id"
+  
+  has_and_belongs_to_many :required_groups,
+    :class_name => "WasabbiGroup",
+    :join_table => "wasabbi_required_groups",
+    :association_foreign_key => "group_id",
+    :foreign_key => "forum_id"
 
   cols = [:parent, :child]
 
@@ -17,7 +23,9 @@ class WasabbiForum < ActiveRecord::Base
   end
 
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
-    :foreign_key => :forum_id
+    :foreign_key => :forum_id, :key_column => "name"
+  validates_associated :string_options
+
 
   def subcategories
     children.select {|child| child.is_category}
@@ -28,6 +36,27 @@ class WasabbiForum < ActiveRecord::Base
   end
 
   def page_of_threads page, limit
+    #XXX
+  end
 
+  def private_forum?
+    case string_options["require_login_to_read"]
+    when "true"
+      true
+    when "false"
+      false
+    when nil
+      if parents.empty?
+        false
+      else
+        parents.map(&:private_forum?).all?
+      end
+    else
+      raise "invalid setting for 'require_login_to_read'"
+    end
+  end
+  
+  def public_forum?
+    !private_forum?
   end
 end
