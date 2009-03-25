@@ -24,7 +24,11 @@ class WasabbiForum < ActiveRecord::Base
 
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
     :foreign_key => :forum_id, :key_column => "name"
-  validates_associated :string_options
+  validates_associated :all_string_options
+
+  def all_string_options
+    string_options.models
+  end
 
 
   def subcategories

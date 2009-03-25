@@ -5,7 +5,10 @@ class WasabbiForumStringOption < ActiveRecord::Base
     ["true", "false"]
   end
   def self.possibilities
-    {"require_login_to_read" => booleans}
+    {
+      "require_login_to_read" => booleans,
+      "default_theme" => ["no_theme", "default"]
+    }
   end
   validates_inclusion_of :name, :in => possibilities.keys
   validates_presence_of :name, :value, :forum_id
