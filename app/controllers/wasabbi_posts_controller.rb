@@ -8,7 +8,7 @@ class WasabbiPostsController < ApplicationController
   # GET /wasabbi_posts.xml
   def index
     WasabbiPost.transaction do
-      @wasabbi_posts = WasabbiPost.find(:all)
+      @wasabbi_posts = WasabbiPost.find_all_by_thread_id(params[:thread_id])
 
       respond_to do |format|
         format.html # index.html.erb
