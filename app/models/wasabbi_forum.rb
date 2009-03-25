@@ -5,12 +5,22 @@ class WasabbiForum < ActiveRecord::Base
 
   has_many :modships, :class_name => "WasabbiModship", :foreign_key => "forum_id"
   has_many :adminships, :class_name => "WasabbiAdminship", :foreign_key => "forum_id"
-  
+  has_many :direct_groups, :class_name => "WasabbiGroup", :foreign_key => "forum_id"
+
   has_and_belongs_to_many :required_groups,
     :class_name => "WasabbiGroup",
     :join_table => "wasabbi_required_groups",
     :association_foreign_key => "group_id",
     :foreign_key => "forum_id"
+  def all_required_groups retval = []
+    retval = []
+
+    required_groups.each {|i| retval << i}
+    parents.each do |parent|
+      parent.all_required_groups(retval)
+    end
+    retval
+  end
 
   cols = [:parent, :child]
 
@@ -25,6 +35,16 @@ class WasabbiForum < ActiveRecord::Base
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
     :foreign_key => :forum_id, :key_column => "name"
   validates_associated :all_string_options
+
+  def before_destroy
+    string_options.clear
+    required_groups.clear
+    [thread_list_entries,
+      modships,
+      adminships,
+      direct_groups
+      ].flatten.compact.each {|ma| ma.destroy}
+  end
 
   def all_string_options
     string_options.models
@@ -59,7 +79,7 @@ class WasabbiForum < ActiveRecord::Base
       raise "invalid setting for 'require_login_to_read'"
     end
   end
-  
+
   def public_forum?
     !private_forum?
   end
