@@ -6,6 +6,10 @@ class WasabbiUser < ActiveRecord::Base
     :join_table => "wasabbi_members",
     :association_foreign_key => "group_id"
 
+  def owns? obj
+    obj.wasabbi_user_id == id
+  end
+
   def subforum_adminships
     adminships.select(&:is_subforum_admin)
   end
