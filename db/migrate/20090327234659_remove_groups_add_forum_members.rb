@@ -5,11 +5,10 @@ class RemoveGroupsAddForumMembers < ActiveRecord::Migration
       drop_table :wasabbi_groups
 
       create_table :wasabbi_forum_members, :id => false do |t|
-        t.integer :forum_id, :integer, :null => false,
+        t.integer :forum_id, :null => false,
           :references => "wasabbi_forums"
-        t.integer :wasabbi_user_id, :integer, :null => false
+        t.integer :wasabbi_user_id, :null => false
       end
-
 
       add_index :wasabbi_forum_members, :wasabbi_user_id
       add_index :wasabbi_forum_members, [:forum_id, :wasabbi_user_id],

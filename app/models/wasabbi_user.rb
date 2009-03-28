@@ -3,7 +3,7 @@ class WasabbiUser < ActiveRecord::Base
   has_many :adminships, :class_name => "WasabbiAdminship"
   has_and_belongs_to_many :memberships,
     :class_name => "WasabbiForum",
-    :join_table => "wasabbi_forums_members",
+    :join_table => "wasabbi_forum_members",
     :association_foreign_key => "forum_id"
 
   def member? forum
@@ -14,6 +14,7 @@ class WasabbiUser < ActiveRecord::Base
         return true if member?(f)
       end
     end
+    false
   end
 
   def owns? obj
@@ -25,7 +26,7 @@ class WasabbiUser < ActiveRecord::Base
   end
 
   def admin? forum_id = nil, only_subs = false
-    return true if adminships.map(&:is_super_admin).any?
+    return true if super_admin?
 
     if forum_id
       forum_id = forum_id.to_i
@@ -44,6 +45,10 @@ class WasabbiUser < ActiveRecord::Base
     end
 
     false
+  end
+
+  def super_admin?
+    adminships.map(&:is_super_admin).any?
   end
 
   def subforum_modships

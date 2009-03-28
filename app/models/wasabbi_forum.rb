@@ -24,10 +24,6 @@ class WasabbiForum < ActiveRecord::Base
     retval
   end
 
-  def member? user
-
-  end
-
   cols = [:parent, :child]
 
   [cols,cols.reverse].each do |top,bot|
@@ -69,7 +65,11 @@ class WasabbiForum < ActiveRecord::Base
   end
 
   def private_forum?
-    case string_options["require_login_to_read"]
+    members_only?
+  end
+
+  def members_only?
+    case string_options["members_only"]
     when "true"
       true
     when "false"
@@ -78,14 +78,21 @@ class WasabbiForum < ActiveRecord::Base
       if parents.empty?
         false
       else
-        parents.map(&:private_forum?).all?
+        parents.map(&:members_only?).all?
       end
     else
-      raise "invalid setting for 'require_login_to_read'"
+      raise "invalid setting for 'members_only'"
     end
   end
 
   def public_forum?
     !private_forum?
+  end
+
+  def self.root_forum
+    retval = WasabbiRootForum.find(:all)
+    raise "No root forum created?  How can that be?!" if retval.blank?
+    raise "More than one root forum?" unless retval.size == 1
+    retval[0].forum
   end
 end

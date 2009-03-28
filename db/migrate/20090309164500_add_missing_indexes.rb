@@ -2,7 +2,7 @@ class AddMissingIndexes < ActiveRecord::Migration
   def self.to_index
     {
       :wasabbi_forum_children => [:child_id, :parent_id],
-      :wasabbi_forum_options => [:forum_id, :name],
+      :wasabbi_forum_options => [:wasabbi_forum_id, :name],
       :wasabbi_forums => [:name]
     }
   end

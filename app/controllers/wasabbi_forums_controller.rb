@@ -1,6 +1,7 @@
 class WasabbiForumsController < ApplicationController
-  wasabbi_require_login :except => [:show, :index]
-  wasabbi_require_admin :except => [:show, :index]
+  wasabbi_require_login :if_public => {:except => [:index, :show]}
+  wasabbi_require_admin :except => [:index, :show]
+  wasabbi_check_membership
 
   # GET /forums
   # GET /forums.xml
