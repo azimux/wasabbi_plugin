@@ -1,10 +1,20 @@
 class WasabbiUser < ActiveRecord::Base
   belongs_to :user, :class_name => Wasabbi.user_class.name
   has_many :adminships, :class_name => "WasabbiAdminship"
-  has_and_belongs_to_many :groups,
-    :class_name => "WasabbiGroup",
-    :join_table => "wasabbi_members",
-    :association_foreign_key => "group_id"
+  has_and_belongs_to_many :memberships,
+    :class_name => "WasabbiForum",
+    :join_table => "wasabbi_forums_members",
+    :association_foreign_key => "forum_id"
+
+  def member? forum
+    return true if memberships.include? forum
+
+    if forum.inherits_members
+      forum.parents.each do |f|
+        return true if member?(f)
+      end
+    end
+  end
 
   def owns? obj
     obj.wasabbi_user_id == id

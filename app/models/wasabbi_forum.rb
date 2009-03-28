@@ -5,21 +5,27 @@ class WasabbiForum < ActiveRecord::Base
 
   has_many :modships, :class_name => "WasabbiModship", :foreign_key => "forum_id"
   has_many :adminships, :class_name => "WasabbiAdminship", :foreign_key => "forum_id"
-  has_many :direct_groups, :class_name => "WasabbiGroup", :foreign_key => "forum_id"
 
-  has_and_belongs_to_many :required_groups,
-    :class_name => "WasabbiGroup",
-    :join_table => "wasabbi_required_groups",
-    :association_foreign_key => "group_id",
+  has_and_belongs_to_many :direct_members,
+    :class_name => "WasabbiUser",
+    :join_table => "wasabbi_forum_members",
     :foreign_key => "forum_id"
-  def all_required_groups retval = []
-    retval = []
 
-    required_groups.each {|i| retval << i}
-    parents.each do |parent|
-      parent.all_required_groups(retval)
+  def all_members retval = []
+    retval ||= []
+
+    direct_members.each {|i| retval << i}
+
+    if inherits_members
+      parents.each do |parent|
+        parent.all_required_groups(retval)
+      end
     end
     retval
+  end
+
+  def member? user
+
   end
 
   cols = [:parent, :child]
@@ -38,12 +44,11 @@ class WasabbiForum < ActiveRecord::Base
 
   def before_destroy
     string_options.clear
-    required_groups.clear
+    direct_members.clear
     [thread_list_entries,
       modships,
       adminships,
-      direct_groups
-      ].flatten.compact.each {|ma| ma.destroy}
+    ].flatten.compact.each {|ma| ma.destroy}
   end
 
   def all_string_options
