@@ -1,9 +1,15 @@
 class WasabbiThreadsController < ApplicationController
+  wasabbi_require_login :if_public => {:except => [:index, :show]}
+  wasabbi_require_mod :except => [:index, :show, :create, :new],
+    :if_owner => {:except => [:edit, :destroy, :update]}
+  wasabbi_check_membership
+
   # GET /wasabbi_threads
   # GET /wasabbi_threads.xml
   def index
     WasabbiThread.transaction do
-      @wasabbi_threads = WasabbiThread.find(:all)
+      forum = WasabbiForum.find(params[:forum_id])
+      @wasabbi_threads = forum.threads
 
       respond_to do |format|
         format.html # index.html.erb
@@ -50,6 +56,7 @@ class WasabbiThreadsController < ApplicationController
   def create
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.new(params[:wasabbi_thread])
+      @wasabbi_thread.wasabbi_user = wasabbi_user
 
       respond_to do |format|
         if @wasabbi_thread.save
@@ -88,13 +95,23 @@ class WasabbiThreadsController < ApplicationController
   def destroy
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
-      @wasabbi_thread.thread_list_entries.each {|tle|tle.destroy}
-      @wasabbi_thread.posts.each {|post| post.destroy}
-      @wasabbi_thread.destroy
 
-      respond_to do |format|
-        format.html { redirect_to(wasabbi_threads_url) }
-        format.xml  { head :ok }
+      if @wasabbi_thread.posts.size == 1
+        @wasabbi_thread.thread_list_entries.each {|tle|tle.destroy}
+        @wasabbi_thread.posts.first.destroy
+        @wasabbi_thread.destroy
+
+        respond_to do |format|
+          format.html { redirect_to(wasabbi_threads_url) }
+          format.xml  { head :ok }
+        end
+      else
+        flash[:error] = "You can't delete threads that have been replied to."
+
+        respond_to do |format|
+          format.html { redirect_to(@wasabbi_thread) }
+          format.xml  { render :xml => "Can't delete threads that have been replied to.", :status => :unprocessable_entity }
+        end
       end
     end
   end

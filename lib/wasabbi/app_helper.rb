@@ -4,7 +4,19 @@ class Wasabbi
       base.extend ClassMethods
     end
 
-    def determine_forum_id
+    def wasabbi_owner?
+      my_id = wasabbi_user.id
+      if my_id && params[:id]
+        begin
+          object = controller_name.singularize.camelize.constantize.find(params[:id])
+          object.wasabbi_user_id == my_id
+        rescue ActiveRecord::RecordNotFound
+          nil
+        end
+      end
+    end
+
+    def wasabbi_determine_forum_id
       params[:forum_id] ||
         if self.class == WasabbiForumsController
         params[:id] || WasabbiForum.root_forum.id
@@ -41,26 +53,42 @@ class Wasabbi
     end
 
     private
-    def skip_check? if_public, if_private
-      forum_id = determine_forum_id
+    def wasabbi_skip_check? if_public, if_private, if_owner
+      forum_id = wasabbi_determine_forum_id
+
+      skip = false
 
       if forum_id
         forum = WasabbiForum.find(forum_id)
 
         if if_public && forum.public_forum?
-          if !if_public[:except].blank?
+          skip ||= if !if_public[:except].blank?
             if_public[:except].include?(action_name.to_sym)
           elsif !if_public[:only].blank?
             !if_public[:only].include?(action_name.to_sym)
           end
-        elsif if_private && !forum.public_forum?
-          if !if_private[:except].blank?
+        end
+
+        if if_private && !forum.public_forum?
+          skip ||= if !if_private[:except].blank?
             if_private[:except].include?(action_name.to_sym)
           elsif !if_private[:only].blank?
             !if_private[:only].include?(action_name.to_sym)
           end
         end
       end
+
+      if if_owner && wasabbi_owner?
+        skip ||= if_owner == true
+
+        skip ||= if !if_owner[:except].blank?
+          if_owner[:except].include?(action_name.to_sym)
+        elsif !if_private[:only].blank?
+          !if_owner[:only].include?(action_name.to_sym)
+        end
+      end
+
+      skip
     end
 
     public
@@ -68,26 +96,26 @@ class Wasabbi
       def wasabbi_require_login options = {}
         if_public = options.delete(:if_public)
         if_private = options.delete(:if_private)
+        if_owner = options.delete(:if_owner)
 
         before_filter options do |controller|
           controller.instance_eval do
-            skip_check?(if_public,if_private) || wasabbi_check_authentication
+            wasabbi_skip_check?(if_public,if_private, if_owner) || wasabbi_check_authentication
           end
         end
       end
 
-
-
       def wasabbi_require_mod options = {}
         if_public = options.delete(:if_public)
         if_private = options.delete(:if_private)
+        if_owner = options.delete(:if_owner)
 
         before_filter options do |controller|
           controller.instance_eval do
-            unless skip_check? if_public, if_private
-              forum_id = determine_forum_id
+            unless wasabbi_skip_check? if_public, if_private, if_owner
+              forum_id = wasabbi_determine_forum_id
 
-              if !(wasabbi_user.mod?(forum_id) || wasabbi_user.admin?(forum_id))
+              if !wasabbi_user.mod?(forum_id) && !wasabbi_user.admin?(forum_id)
                 redirect_to wasabbi_denied_mod_url
               end
             end
@@ -98,11 +126,12 @@ class Wasabbi
       def wasabbi_require_admin options = {}
         if_public = options.delete(:if_public)
         if_private = options.delete(:if_private)
+        if_owner = options.delete(:if_owner)
 
         before_filter options do |controller|
           controller.instance_eval do
-            unless skip_check? if_public, if_private
-              forum_id = determine_forum_id
+            unless wasabbi_skip_check? if_public, if_private, if_owner
+              forum_id = wasabbi_determine_forum_id
 
               if !wasabbi_user.admin? forum_id
                 redirect_to wasabbi_denied_admin_url
@@ -115,17 +144,25 @@ class Wasabbi
       def wasabbi_check_membership options = {}
         if_public = options.delete(:if_public)
         if_private = options.delete(:if_private)
+        if_owner = options.delete(:if_owner)
 
         before_filter options do |controller|
           controller.instance_eval do
-            unless skip_check?(if_public, if_private)
-              forum = WasabbiForum.find(determine_forum_id)
+            unless wasabbi_skip_check?(if_public, if_private, if_owner)
+              forum = begin
+                WasabbiForum.find(wasabbi_determine_forum_id)
+              rescue ActiveRecord::RecordNotFound
+                nil
+              end
 
-
-              if forum.members_only?
-                if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
-                  redirect_to wasabbi_denied_member_url
+              if forum
+                if forum.members_only?
+                  if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
+                    redirect_to wasabbi_denied_member_url
+                  end
                 end
+              else
+                false
               end
             end
           end
