@@ -55,8 +55,11 @@ class WasabbiThreadsController < ApplicationController
   # POST /wasabbi_threads.xml
   def create
     WasabbiThread.transaction do
+      forum_id = params[:wasabbi_thread].delete(:forum_id)
       @wasabbi_thread = WasabbiThread.new(params[:wasabbi_thread])
+      @wasabbi_thread.forum_id = forum_id
       @wasabbi_thread.wasabbi_user = wasabbi_user
+
 
       respond_to do |format|
         if @wasabbi_thread.save

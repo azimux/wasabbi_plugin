@@ -1,6 +1,6 @@
 class WasabbiForumsController < ApplicationController
-  wasabbi_require_login :if_public => {:except => [:index, :show]}
-  wasabbi_require_admin :except => [:index, :show]
+  wasabbi_require_login :if_public => {:except => [:show]}
+  wasabbi_require_admin :except => [:show]
   wasabbi_check_membership
 
   # GET /forums
@@ -33,7 +33,7 @@ class WasabbiForumsController < ApplicationController
   # GET /forums/new.xml
   def new
     WasabbiForum.transaction do
-      @wasabbi_forum = WasabbiForum.new
+      @wasabbi_forum = WasabbiForum.new(params[:wasabbi_forum])
 
       respond_to do |format|
         format.html # new.html.erb
@@ -54,7 +54,8 @@ class WasabbiForumsController < ApplicationController
   def create
     WasabbiForum.transaction do
       @wasabbi_forum = WasabbiForum.new(params[:wasabbi_forum])
-      @wasabbi_forum.parents << WasabbiForum.find(params[:forum_id])
+      #@wasabbi_forum.parents << WasabbiForum.find(params[:forum_id])
+      raise "no parent!" unless @wasabbi_forum.parent
 
       respond_to do |format|
         if @wasabbi_forum.save
@@ -98,7 +99,7 @@ class WasabbiForumsController < ApplicationController
       @wasabbi_forum.thread_list_entries.each {|tle| tle.destroy}
       [@wasabbi_forum.modships, @wasabbi_forum.adminships].flatten.compact.each {|ma| ma.destroy}
       @wasabbi_forum.destroy
-    
+
       respond_to do |format|
         format.html { redirect_to(wasabbi_forums_url) }
         format.xml  { head :ok }

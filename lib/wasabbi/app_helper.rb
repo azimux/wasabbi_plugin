@@ -8,7 +8,7 @@ class Wasabbi
       my_id = wasabbi_user.id
       if my_id && params[:id]
         begin
-          object = controller_name.singularize.camelize.constantize.find(params[:id])
+          object = wasabbi_class.find(params[:id])
           object.wasabbi_user_id == my_id
         rescue ActiveRecord::RecordNotFound
           nil
@@ -16,11 +16,32 @@ class Wasabbi
       end
     end
 
+    def wasabbi_class
+      controller_name.singularize.camelize.constantize
+    end
+
     def wasabbi_determine_forum_id
-      params[:forum_id] ||
-        if self.class == WasabbiForumsController
-        params[:id] || WasabbiForum.root_forum.id
+      if self.class == WasabbiForumsController
+        if ['new','create'].include?(action_name)
+          retval = params[:wasabbi_forum]
+          retval &&= retval[:parent_id]
+        else
+          retval = params[:id]
+        end
+      elsif h = params[controller_name.singularize.to_sym]
+        retval = h[:forum_id]
       end
+
+      unless retval
+        begin
+          tmp = wasabbi_class.find(params[:id]).forum
+          retval = tmp.id if tmp.class == WasabbiForum
+        rescue NoMethodError, ActiveRecord::RecordNotFound
+        end
+      end
+
+      retval ||= params[:forum_id]
+      retval
     end
 
     def wasabbi_check_authentication

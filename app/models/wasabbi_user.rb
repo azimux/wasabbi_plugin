@@ -10,12 +10,7 @@ class WasabbiUser < ActiveRecord::Base
   def member? forum
     return true if memberships.include? forum
 
-    if forum.inherits_members
-      forum.parents.each do |f|
-        return true if member?(f)
-      end
-    end
-    false
+    forum.inherits_members && forum.parent && member?(forum.parent)
   end
 
   def owns? obj
@@ -37,15 +32,12 @@ class WasabbiUser < ActiveRecord::Base
       if admins.map(&:forum_id).map(&:to_i).include?(forum_id)
         return true
       else
-        WasabbiForum.find(forum_id).parents.each do |parent|
-          if admin?(parent.id, true)
-            return true
-          end
-        end
+        forum = WasabbiForum.find(forum_id)
+
+        forum.inherits_admins? && forum.parent &&
+          admin?(forum.parent.id, true)
       end
     end
-
-    false
   end
 
   def super_admin?
@@ -68,14 +60,11 @@ class WasabbiUser < ActiveRecord::Base
       if mods.map(&:forum_id).map(&:to_i).include?(forum_id)
         return true
       else
-        WasabbiForum.find(forum_id).parents.each do |parent|
-          if mod?(parent.id, true)
-            return true
-          end
-        end
+        forum = WasabbiForum.find(forum_id)
+
+        forum.inherits_mods? && forum.parent &&
+          mod?(forum.parent.id, true)
       end
     end
-
-    false
   end
 end

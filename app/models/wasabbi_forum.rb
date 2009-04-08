@@ -1,5 +1,7 @@
 class WasabbiForum < ActiveRecord::Base
   has_many :threads, :through => :thread_list_entries
+  has_many :direct_threads, :class_name => "WasabbiThread",
+    :foreign_key => "forum_id"
   has_many :thread_list_entries, :class_name => "WasabbiThreadListEntry",
     :foreign_key => "forum_id"
 
@@ -11,32 +13,36 @@ class WasabbiForum < ActiveRecord::Base
     :join_table => "wasabbi_forum_members",
     :foreign_key => "forum_id"
 
-  def all_members retval = []
-    retval ||= []
+  #  cols = [:parent, :child]
+  #  [cols,cols.reverse].each do |top,bot|
+  #    has_and_belongs_to_many bot.to_s.pluralize,
+  #      :class_name => "WasabbiForum",
+  #      :join_table => "wasabbi_forum_children",
+  #      :association_foreign_key => "#{bot}_id",
+  #      :foreign_key => "#{top}_id"
+  #  end
 
-    direct_members.each {|i| retval << i}
-
-    if inherits_members
-      parents.each do |parent|
-        parent.all_required_groups(retval)
-      end
-    end
-    retval
-  end
-
-  cols = [:parent, :child]
-
-  [cols,cols.reverse].each do |top,bot|
-    has_and_belongs_to_many bot.to_s.pluralize,
-      :class_name => "WasabbiForum",
-      :join_table => "wasabbi_forum_children",
-      :association_foreign_key => "#{bot}_id",
-      :foreign_key => "#{top}_id"
-  end
+  has_many :children, :class_name => "WasabbiForum",
+    :foreign_key => "forum_id"
+  belongs_to :parent, :class_name => "WasabbiForum"
 
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
     :foreign_key => :forum_id, :key_column => "name"
+
   validates_associated :all_string_options
+
+  def all_members
+    #    retval ||= []
+    #
+    #    direct_members.each {|i| retval << i}
+    #
+    #    if inherits_members && parent
+    #      parent.all_members(retval)
+    #    end
+    #    retval
+    #
+    direct_members + (parent ? parent.all_members : [])
+  end
 
   def before_destroy
     string_options.clear
@@ -75,11 +81,7 @@ class WasabbiForum < ActiveRecord::Base
     when "false"
       false
     when nil
-      if parents.empty?
-        false
-      else
-        parents.map(&:members_only?).all?
-      end
+      parent && parent.members_only?
     else
       raise "invalid setting for 'members_only'"
     end
@@ -89,10 +91,29 @@ class WasabbiForum < ActiveRecord::Base
     !private_forum?
   end
 
-  def self.root_forum
-    retval = WasabbiRootForum.find(:all)
-    raise "No root forum created?  How can that be?!" if retval.blank?
-    raise "More than one root forum?" unless retval.size == 1
-    retval[0].forum
+  def inherits_admins?
+    case string_options["inherits_admins"]
+    when "true"
+      true
+    when "false"
+      false
+    when nil
+      true #default to true
+    else
+      raise "invalid setting for 'inherits_admins'"
+    end
+  end
+
+  def inherits_mods?
+    case string_options["inherits_mods"]
+    when "true"
+      true
+    when "false"
+      false
+    when nil
+      true #default to true
+    else
+      raise "invalid setting for 'inherits_mods'"
+    end
   end
 end

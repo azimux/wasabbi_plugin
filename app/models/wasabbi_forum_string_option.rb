@@ -4,9 +4,12 @@ class WasabbiForumStringOption < ActiveRecord::Base
   def self.booleans
     ["true", "false"]
   end
+  
   def self.possibilities
     {
       "members_only" => booleans,
+      "inherits_members" => booleans,
+      "inherits_mods" => booleans,
       "default_theme" => ["no_theme", "default"]
     }
   end
