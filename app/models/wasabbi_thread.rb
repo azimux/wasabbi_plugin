@@ -9,4 +9,40 @@ class WasabbiThread < ActiveRecord::Base
   has_many :posts, :class_name => "WasabbiPost", :foreign_key => "thread_id"
 
   attr_accessible :subject, :body
+
+  def bump!
+    thread_list_entries.each do |tle|
+      if !tle.moved_to
+        tle.bumped_at = Time.now
+        tle.save!
+      end
+    end
+  end
+
+  def move_to(forum)
+    f = forum
+    tles = []
+
+    while f
+      tle = WasabbiThreadListEntry.find_by_forum_id_and_thread_id(f.id, id)
+      tle ||= WasabbiThreadListEntry.create!(:forum_id => f.id,
+        :bumped_at => Time.now,
+        :thread_id => id)
+
+      tles << tle
+
+      f = f.parent
+      if f
+        f = nil unless f.show_subthreads?
+      end
+    end
+
+    reload
+    thread_list_entries.each do |tle|
+      if !tles.include?(tle)
+        tle.moved_to = forum
+        tle.save!
+      end
+    end
+  end
 end

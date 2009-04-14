@@ -1,9 +1,9 @@
 class WasabbiForum < ActiveRecord::Base
-  has_many :threads, :through => :thread_list_entries
+  has_many :threads, :through => :thread_list_entries, :order => "bumped_at desc"
   has_many :direct_threads, :class_name => "WasabbiThread",
     :foreign_key => "forum_id"
   has_many :thread_list_entries, :class_name => "WasabbiThreadListEntry",
-    :foreign_key => "forum_id"
+    :foreign_key => "forum_id", :order => "bumped_at desc"
 
   has_many :modships, :class_name => "WasabbiModship", :foreign_key => "forum_id"
   has_many :adminships, :class_name => "WasabbiAdminship", :foreign_key => "forum_id"
@@ -70,50 +70,84 @@ class WasabbiForum < ActiveRecord::Base
     #XXX
   end
 
+  [[:members_only, :inherit],
+    [:inherits_admins, true],
+    [:inherits_mods, true],
+    [:show_subthreads, :inherit]
+  ].each do |m|
+    mq = nil
+    d = nil
+
+    if m.is_a?(Array)
+      d = m[1]
+      m = m[0]
+    end
+
+    mq = "#{m}?"
+    m = m.to_s
+
+    define_method mq do
+      case string_options[m]
+      when "true"
+        true
+      when "false"
+        false
+      when nil
+        if d == :inherit
+          parent && parent.send(mq)
+        else
+          d
+        end
+      else
+        raise "invalid setting for '#{m}'"
+      end
+    end
+  end
+
   def private_forum?
     members_only?
   end
-
-  def members_only?
-    case string_options["members_only"]
-    when "true"
-      true
-    when "false"
-      false
-    when nil
-      parent && parent.members_only?
-    else
-      raise "invalid setting for 'members_only'"
-    end
-  end
+  #
+  #  def members_only?
+  #    case string_options["members_only"]
+  #    when "true"
+  #      true
+  #    when "false"
+  #      false
+  #    when nil
+  #      parent && parent.members_only?
+  #    else
+  #      raise "invalid setting for 'members_only'"
+  #    end
+  #  end
 
   def public_forum?
     !private_forum?
   end
 
-  def inherits_admins?
-    case string_options["inherits_admins"]
-    when "true"
-      true
-    when "false"
-      false
-    when nil
-      true #default to true
-    else
-      raise "invalid setting for 'inherits_admins'"
-    end
-  end
+  #  def inherits_admins?
+  #    case string_options["inherits_admins"]
+  #    when "true"
+  #      true
+  #    when "false"
+  #      false
+  #    when nil
+  #      true #default to true
+  #    else
+  #      raise "invalid setting for 'inherits_admins'"
+  #    end
+  #  end
 
-  def inherits_mods?
-    case string_options["inherits_mods"]
-    when "true"
-      true
-    when "false"
-      false
-    when nil
-      true #default to true
-    else
-      raise "invalid setting for 'inherits_mods'"
-    end
-  end
+  #  def inherits_mods?
+  #    case string_options["inherits_mods"]
+  #    when "true"
+  #      true
+  #    when "false"
+  #      false
+  #    when nil
+  #      true #default to true
+  #    else
+  #      raise "invalid setting for 'inherits_mods'"
+  #    end
+  #  end
 end

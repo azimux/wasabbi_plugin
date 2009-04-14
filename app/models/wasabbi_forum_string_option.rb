@@ -10,6 +10,7 @@ class WasabbiForumStringOption < ActiveRecord::Base
       "members_only" => booleans,
       "inherits_members" => booleans,
       "inherits_mods" => booleans,
+      "show_subthreads" => booleans,
       "default_theme" => ["no_theme", "default"]
     }
   end

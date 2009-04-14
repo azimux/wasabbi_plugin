@@ -5,4 +5,6 @@ class WasabbiThreadListEntry < ActiveRecord::Base
   
   belongs_to :thread, :class_name => "WasabbiThread" #, :foreign_key => :thread_id
   belongs_to :forum, :class_name => "WasabbiForum" #, :foreign_key => :forum_id
+
+  belongs_to :moved_to, :class_name => "WasabbiForum"
 end
