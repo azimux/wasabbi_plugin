@@ -67,4 +67,15 @@ class WasabbiUser < ActiveRecord::Base
       end
     end
   end
+
+  def after_create
+    #if first user, make him super admin
+    if WasabbiUser.count == 1
+      if WasabbiUser.find(:first) == self
+        WasabbiAdminship.create!(:wasabbi_user_id => id)
+      else
+        raise "only one user, but it's not this freshly created user."
+      end
+    end
+  end
 end
