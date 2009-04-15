@@ -34,6 +34,21 @@ class Wasabbi
 
       unless retval
         begin
+          if wasabbi_class == WasabbiPost
+            if params[:id]
+              retval = wasabbi_class.find(params[:id]).thread.forum_id
+            elsif params[:wasabbi_post]
+              retval = WasabbiThread.find(params[:wasabbi_post][:thread_id]).forum_id
+            elsif params[:thread_id]
+              retval = WasabbiThread.find(params[:thread_id]).forum_id
+            end
+          end
+        rescue NoMethodError, ActiveRecord::RecordNotFound
+        end
+      end
+
+      unless retval
+        begin
           tmp = wasabbi_class.find(params[:id]).forum
           retval = tmp.id if tmp.class == WasabbiForum
         rescue NoMethodError, ActiveRecord::RecordNotFound
@@ -77,7 +92,7 @@ class Wasabbi
     def wasabbi_skip_check? if_public, if_private, if_owner
       forum_id = wasabbi_determine_forum_id
 
-      skip = false
+      skip = wasabbi_user && wasabbi_user.super_admin?
 
       if forum_id
         forum = WasabbiForum.find(forum_id)
@@ -169,24 +184,24 @@ class Wasabbi
 
         before_filter options do |controller|
           controller.instance_eval do
-            unless wasabbi_skip_check?(if_public, if_private, if_owner)
-              forum = begin
-                WasabbiForum.find(wasabbi_determine_forum_id)
-              rescue ActiveRecord::RecordNotFound
-                nil
-              end
-
-              if forum
-                if forum.members_only?
-                  if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
-                    redirect_to wasabbi_denied_member_url
-                  end
+              unless wasabbi_skip_check?(if_public, if_private, if_owner)
+                forum = begin
+                  WasabbiForum.find(wasabbi_determine_forum_id)
+                rescue ActiveRecord::RecordNotFound
+                  nil
                 end
-              else
-                false
+
+                if forum
+                  if forum.members_only?
+                    if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
+                      redirect_to wasabbi_denied_member_url
+                    end
+                  end
+                else
+                  raise Wasabbi::NoForumGiven
+                end
               end
-            end
-          end
+                      end
         end
       end
 
