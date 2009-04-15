@@ -106,4 +106,13 @@ class WasabbiForumsController < ApplicationController
       end
     end
   end
+
+  def first
+    forum = WasabbiForum.find(:first, :order => "id")
+    if forum
+      redirect_to wasabbi_forum_url(forum)
+    else
+      redirect_to new_wasabbi_forum_url
+    end
+  end
 end
