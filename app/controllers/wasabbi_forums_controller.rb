@@ -55,7 +55,7 @@ class WasabbiForumsController < ApplicationController
     WasabbiForum.transaction do
       @wasabbi_forum = WasabbiForum.new(params[:wasabbi_forum])
       #@wasabbi_forum.parents << WasabbiForum.find(params[:forum_id])
-      raise "no parent!" unless @wasabbi_forum.parent
+      #raise "no parent!" unless @wasabbi_forum.parent
 
       respond_to do |format|
         if @wasabbi_forum.save
@@ -108,7 +108,11 @@ class WasabbiForumsController < ApplicationController
   end
 
   def first
-    forum = WasabbiForum.find(:first, :order => "id")
+    forum = begin
+      WasabbiForum.find(:first, :order => "id")
+    rescue ActiveRecord::RecordNotFound
+    end
+    
     if forum
       redirect_to wasabbi_forum_url(forum)
     else

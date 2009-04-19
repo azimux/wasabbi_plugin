@@ -1,16 +1,19 @@
-
-
-<p>
-  <b>Name:</b>
-  <%=h @wasabbi_forum.name %>
-</p>
+<%= render :partial => "wasabbi_forums/crumbs",
+  :locals => {:forum => @wasabbi_forum} %>
 
 <p>
   <b>Description:</b>
   <%=h @wasabbi_forum.description %>
 </p>
 
-
+<%= link_to "Create new forum under #{h @wasabbi_forum.name}",
+  new_wasabbi_forum_path(:wasabbi_forum => {
+    :parent_id => @wasabbi_forum.id
+  }) %> <br/>
+<%= link_to "Create new top level forum",
+  new_wasabbi_forum_path %> <br/>
+<br/>
 
 <%= link_to 'Edit', edit_wasabbi_forum_path(@wasabbi_forum) %> |
-<%= link_to 'Back', wasabbi_forums_path %>
+<%= link_to 'Back', wasabbi_forums_path %> |
+<%= link_to "Destroy this forum (#{h @wasabbi_forum.name})", @wasabbi_forum, :confirm => 'Are you sure?', :method => :delete %>

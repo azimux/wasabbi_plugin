@@ -13,15 +13,6 @@ class WasabbiForum < ActiveRecord::Base
     :join_table => "wasabbi_forum_members",
     :foreign_key => "forum_id"
 
-  #  cols = [:parent, :child]
-  #  [cols,cols.reverse].each do |top,bot|
-  #    has_and_belongs_to_many bot.to_s.pluralize,
-  #      :class_name => "WasabbiForum",
-  #      :join_table => "wasabbi_forum_children",
-  #      :association_foreign_key => "#{bot}_id",
-  #      :foreign_key => "#{top}_id"
-  #  end
-
   has_many :children, :class_name => "WasabbiForum",
     :foreign_key => "forum_id"
   belongs_to :parent, :class_name => "WasabbiForum"
@@ -32,15 +23,6 @@ class WasabbiForum < ActiveRecord::Base
   validates_associated :all_string_options
 
   def all_members
-    #    retval ||= []
-    #
-    #    direct_members.each {|i| retval << i}
-    #
-    #    if inherits_members && parent
-    #      parent.all_members(retval)
-    #    end
-    #    retval
-    #
     direct_members + (parent ? parent.all_members : [])
   end
 
@@ -107,47 +89,8 @@ class WasabbiForum < ActiveRecord::Base
   def private_forum?
     members_only?
   end
-  #
-  #  def members_only?
-  #    case string_options["members_only"]
-  #    when "true"
-  #      true
-  #    when "false"
-  #      false
-  #    when nil
-  #      parent && parent.members_only?
-  #    else
-  #      raise "invalid setting for 'members_only'"
-  #    end
-  #  end
 
   def public_forum?
     !private_forum?
   end
-
-  #  def inherits_admins?
-  #    case string_options["inherits_admins"]
-  #    when "true"
-  #      true
-  #    when "false"
-  #      false
-  #    when nil
-  #      true #default to true
-  #    else
-  #      raise "invalid setting for 'inherits_admins'"
-  #    end
-  #  end
-
-  #  def inherits_mods?
-  #    case string_options["inherits_mods"]
-  #    when "true"
-  #      true
-  #    when "false"
-  #      false
-  #    when nil
-  #      true #default to true
-  #    else
-  #      raise "invalid setting for 'inherits_mods'"
-  #    end
-  #  end
 end

@@ -1,0 +1,16 @@
+<%
+forums = []
+while forum
+  forums << forum
+  forum = forum.parent
+end
+
+while !forums.empty?
+  forum = forums.pop %>
+
+  <%= link_to(h(forum.name), wasabbi_forum_url(forum)) -%>
+
+  <% if !forums.empty? %>
+    ->
+  <% end
+end %>

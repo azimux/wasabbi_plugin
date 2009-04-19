@@ -56,6 +56,10 @@ class Wasabbi
       end
 
       retval ||= params[:forum_id]
+      if retval.is_a?(String)
+        retval = nil if retval.strip == ""
+      end
+
       retval
     end
 
@@ -184,24 +188,24 @@ class Wasabbi
 
         before_filter options do |controller|
           controller.instance_eval do
-              unless wasabbi_skip_check?(if_public, if_private, if_owner)
-                forum = begin
-                  WasabbiForum.find(wasabbi_determine_forum_id)
-                rescue ActiveRecord::RecordNotFound
-                  nil
-                end
-
-                if forum
-                  if forum.members_only?
-                    if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
-                      redirect_to wasabbi_denied_member_url
-                    end
-                  end
-                else
-                  raise Wasabbi::NoForumGiven
-                end
+            unless wasabbi_skip_check?(if_public, if_private, if_owner)
+              forum = begin
+                WasabbiForum.find(wasabbi_determine_forum_id)
+              rescue ActiveRecord::RecordNotFound
+                nil
               end
-                      end
+
+              if forum
+                if forum.members_only?
+                  if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
+                    redirect_to wasabbi_denied_member_url
+                  end
+                end
+              else
+                raise Wasabbi::NoForumGiven
+              end
+            end
+          end
         end
       end
 
