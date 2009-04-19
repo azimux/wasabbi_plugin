@@ -14,7 +14,7 @@ class WasabbiForum < ActiveRecord::Base
     :foreign_key => "forum_id"
 
   has_many :children, :class_name => "WasabbiForum",
-    :foreign_key => "forum_id"
+    :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "WasabbiForum"
 
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
@@ -48,8 +48,10 @@ class WasabbiForum < ActiveRecord::Base
     children.select {|child| !child.is_category}
   end
 
-  def page_of_threads page, limit
-    #XXX
+  def page_of_threads page = 1, limit = 20
+    limit ||= 20
+    page ||= 1
+    thread_list_entries(:offset => page * limit, :limit => limit)
   end
 
   [[:members_only, :inherit],

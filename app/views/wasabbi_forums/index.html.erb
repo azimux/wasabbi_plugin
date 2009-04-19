@@ -8,7 +8,7 @@
     <th>Forum category</th>
   </tr>
 
-<% for wasabbi_forum in @wasabbi_forums %>
+<% @wasabbi_forums.each do |wasabbi_forum| %>
   <tr>
     <td><%=h wasabbi_forum.name %></td>
     <td><%=h wasabbi_forum.description %></td>

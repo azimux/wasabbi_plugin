@@ -1,0 +1,20 @@
+<% form_for(forum) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :is_category %><br />
+    <%= f.check_box :is_category %>
+  </p>
+  <%= f.hidden_field :parent_id %>
+  <p>
+    <%= f.submit submit %>
+  </p>
+<% end %>

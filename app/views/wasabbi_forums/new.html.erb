@@ -1,20 +1,6 @@
 <h1>New wasabbi_forum</h1>
 
-<% form_for(@wasabbi_forum) do |f| %>
-  <%= f.error_messages %>
-
-  <p>
-    <%= f.label :name %><br />
-    <%= f.text_field :name %>
-  </p>
-  <p>
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
-  </p>
-  <%= f.hidden_field :parent_id %>
-  <p>
-    <%= f.submit "Create" %>
-  </p>
-<% end %>
+<%= render :partial => "wasabbi_forums/new_or_edit",
+  :locals => {:forum => @wasabbi_forum, :submit => "Create" } %>
 
 <%= link_to 'Back', wasabbi_forums_path %>

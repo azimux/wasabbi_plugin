@@ -1,3 +1,29 @@
-<% forum.children.each do |cat| %>
-  <% render :partial => "show_category", :locals => {:category => cat}  %>
+<%= render :partial => "wasabbi_forums/crumbs",
+  :locals => {:forum => forum} %>
+
+<p>
+  <b>Description:</b>
+  <%=h forum.description %>
+</p>
+
+<%= link_to "Create new forum under #{h forum.name}",
+  new_wasabbi_forum_path(:wasabbi_forum => {
+    :parent_id => forum.id
+  }) %> <br/>
+<%= link_to "Create new top level forum",
+  new_wasabbi_forum_path %> <br/>
+<br/>
+
+<%= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
+<%= link_to 'Back', wasabbi_forums_path %> |
+<%= link_to "Destroy this forum (#{h forum.name})", forum,
+  :confirm => 'Are you sure?', :method => :delete %>
+
+<% forum.categories.each do |cat| %>
+  <%= render :partial => "wasabbi_categories/show_category",
+    :locals => {:category => cat} %>
+<% end %>
+
+<% forum.page_of_threads(@page, session[:items_per_page]).each do |f| %>
+  #XXX
 <% end %>
