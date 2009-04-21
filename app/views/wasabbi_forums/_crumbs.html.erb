@@ -1,8 +1,10 @@
 <%
-forums = []
-while forum
-  forums << forum
-  forum = forum.parent
+forums = [forum]
+parent = forum.parent
+
+while parent
+  forums << parent unless parent.is_category
+  parent = parent.parent 
 end
 
 while !forums.empty?

@@ -24,6 +24,13 @@ class WasabbiUser < ActiveRecord::Base
   def admin? forum_id = nil, only_subs = false
     return true if super_admin?
 
+    forum = nil
+
+    if forum_id.is_a? WasabbiForum
+      forum = forum_id
+      forum_id = forum_id.id
+    end
+
     if forum_id
       forum_id = forum_id.to_i
 
@@ -32,10 +39,10 @@ class WasabbiUser < ActiveRecord::Base
       if admins.map(&:forum_id).map(&:to_i).include?(forum_id)
         return true
       else
-        forum = WasabbiForum.find(forum_id)
+        forum ||= WasabbiForum.find(forum_id)
 
         forum.inherits_admins? && forum.parent &&
-          admin?(forum.parent.id, true)
+          admin?(forum.parent, true)
       end
     end
   end

@@ -1,0 +1,10 @@
+
+<%= link_to category.name, wasabbi_forum_path(category) %><br/>
+<%= category.description %>
+
+<% category.children.each do |f| %>
+  <%= render :partial => "wasabbi_forums/show_forum",
+    :locals => {:forum => f} %><br/>
+<% end %>
+
+

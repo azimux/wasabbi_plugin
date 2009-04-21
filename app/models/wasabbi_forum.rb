@@ -2,6 +2,7 @@ class WasabbiForum < ActiveRecord::Base
   has_many :threads, :through => :thread_list_entries, :order => "bumped_at desc"
   has_many :direct_threads, :class_name => "WasabbiThread",
     :foreign_key => "forum_id"
+
   has_many :thread_list_entries, :class_name => "WasabbiThreadListEntry",
     :foreign_key => "forum_id", :order => "bumped_at desc"
 
@@ -16,7 +17,7 @@ class WasabbiForum < ActiveRecord::Base
   has_many :children, :class_name => "WasabbiForum",
     :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "WasabbiForum"
-
+  
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
     :foreign_key => :forum_id, :key_column => "name"
 
