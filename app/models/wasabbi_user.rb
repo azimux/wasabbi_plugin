@@ -85,4 +85,8 @@ class WasabbiUser < ActiveRecord::Base
       end
     end
   end
+
+  def username
+    user.username
+  end
 end

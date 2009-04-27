@@ -36,6 +36,7 @@ class WasabbiThreadsController < ApplicationController
   def new
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.new
+      @wasabbi_thread.forum_id = params[:wasabbi_thread][:forum_id]
 
       respond_to do |format|
         format.html # new.html.erb
@@ -59,10 +60,14 @@ class WasabbiThreadsController < ApplicationController
       @wasabbi_thread = WasabbiThread.new(params[:wasabbi_thread])
       @wasabbi_thread.forum_id = forum_id
       @wasabbi_thread.wasabbi_user = wasabbi_user
-
+      @wasabbi_thread.bumped_at = Time.now
 
       respond_to do |format|
         if @wasabbi_thread.save
+          WasabbiThreadListEntry.create!(:thread_id => @wasabbi_thread.id,
+            :forum_id => @wasabbi_thread.forum_id,
+            :bumped_at => @wasabbi_thread.bumped_at
+          )
           flash[:notice] = 'WasabbiThread was successfully created.'
           format.html { redirect_to(@wasabbi_thread) }
           format.xml  { render :xml => @wasabbi_thread, :status => :created, :location => @wasabbi_thread }

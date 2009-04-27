@@ -17,7 +17,7 @@ class WasabbiForum < ActiveRecord::Base
   has_many :children, :class_name => "WasabbiForum",
     :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "WasabbiForum"
-  
+
   has_hash :string_options, :class_name => "WasabbiForumStringOption",
     :foreign_key => :forum_id, :key_column => "name"
 
@@ -39,7 +39,6 @@ class WasabbiForum < ActiveRecord::Base
   def all_string_options
     string_options.models
   end
-
 
   def subcategories
     children.select {|child| child.is_category}
@@ -95,5 +94,13 @@ class WasabbiForum < ActiveRecord::Base
 
   def public_forum?
     !private_forum?
+  end
+
+  def top_level?
+    parent_id.nil?
+  end
+
+  def postable?
+    is_postable
   end
 end

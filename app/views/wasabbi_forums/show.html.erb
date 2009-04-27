@@ -18,10 +18,15 @@
       new_wasabbi_forum_path %> <br/>
   <% end %>
 
+  <br/>
   <%= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
   <%= link_to 'Back', wasabbi_forums_path %> |
   <%= link_to "Destroy this forum (#{h forum.name})", forum,
     :confirm => 'Are you sure?', :method => :delete %><br/>
+<% end %>
+
+<% if forum.postable? %>
+  <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
 <% end %>
 
 <% forum.subcategories.each do |cat| %>
@@ -33,6 +38,11 @@
     :locals => {:forum => f} %>
 <% end %>
 
-<% forum.page_of_threads(@page, session[:items_per_page]).each do |f| %>
-  #XXX
+<% forum.page_of_threads(@page, session[:items_per_page]).each do |thread| %>
+  <%= render :partial => "wasabbi_threads/show_thread_row",
+    :locals => {:thread => thread} %>
+<% end %>
+
+<% if forum.postable? %>
+  <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
 <% end %>

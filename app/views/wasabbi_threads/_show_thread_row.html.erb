@@ -1,0 +1,12 @@
+<%=  link_to h(thread.name), wasabbi_thread_path(thread) %>
+
+<%= h(thread.replies) %>
+
+<%= link_to h(thread.wasabbi_user.username), wasabbi_user_path(thread.wasabbi_user) %>
+
+<%= h(thread.views) %>
+
+<%= h(thread.bumped_at) %><br/>
+<%= h(thread.last_post.wasabbi_user.username) %>
+<%= link_to h(thread.last_post.wasabbi_user.username),
+  wasabbi_user_path(thread.last_post.wasabbi_user.username) %>

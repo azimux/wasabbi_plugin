@@ -11,9 +11,12 @@ class WasabbiThread < ActiveRecord::Base
   attr_accessible :subject, :body
 
   def bump!
+    self.bumped_at = Time.now
+    save!
+
     thread_list_entries.each do |tle|
       if !tle.moved_to
-        tle.bumped_at = Time.now
+        tle.bumped_at = self.bumped_at
         tle.save!
       end
     end
