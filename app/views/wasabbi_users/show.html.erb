@@ -1,0 +1,29 @@
+<p>
+  <b>Username:</b>
+  <%=h @wasabbi_user.username %>
+</p>
+
+<% if wasabbi_admin? %>
+  <p>
+    Admin controls will go here
+  </p>
+  <%#= link_to "Create new forum under #{h forum.name}",
+  new_wasabbi_forum_path(:wasabbi_forum => {
+  :parent_id => forum.id
+  }) %> <br/>
+  <%# if wasabbi_admin? %>
+  <%#= link_to "Create new top level forum",
+  new_wasabbi_forum_path %> <br/>
+  <%# end %>
+
+  <%#*<br/>%>
+  <%#= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
+  <%#= link_to 'Back', wasabbi_forums_path %> |
+  <%#= link_to "Destroy this forum (#{h forum.name})", forum,
+  :confirm => 'Are you sure?', :method => :delete %><br/>
+<% end %>
+
+<p>
+  <b>Post count:</b>
+  <%=h @wasabbi_user.post_count %>
+</p>
