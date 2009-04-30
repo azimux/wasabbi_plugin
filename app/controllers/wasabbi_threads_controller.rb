@@ -60,10 +60,11 @@ class WasabbiThreadsController < ApplicationController
       @wasabbi_thread = WasabbiThread.new(params[:wasabbi_thread])
       @wasabbi_thread.forum_id = forum_id
       @wasabbi_thread.wasabbi_user = wasabbi_user
+      wasabbi_user.post_count += 1
       @wasabbi_thread.bumped_at = Time.now
 
       respond_to do |format|
-        if @wasabbi_thread.save
+        if @wasabbi_thread.save && wasabbi_user.save
           WasabbiThreadListEntry.create!(:thread_id => @wasabbi_thread.id,
             :forum_id => @wasabbi_thread.forum_id,
             :bumped_at => @wasabbi_thread.bumped_at
@@ -72,6 +73,7 @@ class WasabbiThreadsController < ApplicationController
           format.html { redirect_to(@wasabbi_thread) }
           format.xml  { render :xml => @wasabbi_thread, :status => :created, :location => @wasabbi_thread }
         else
+          rollback_db_transaction
           format.html { render :action => "new" }
           format.xml  { render :xml => @wasabbi_thread.errors, :status => :unprocessable_entity }
         end

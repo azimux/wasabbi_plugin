@@ -48,4 +48,8 @@ class WasabbiThread < ActiveRecord::Base
       end
     end
   end
+
+  def last_post
+    WasabbiPost.find(:first, :conditions => ["thread_id = ?", id], :order => "created_at DESC")
+  end
 end

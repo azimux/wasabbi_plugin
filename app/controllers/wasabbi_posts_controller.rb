@@ -61,13 +61,16 @@ class WasabbiPostsController < ApplicationController
   def create
     WasabbiPost.transaction do
       @wasabbi_post = WasabbiPost.new(params[:wasabbi_post])
+      @wasabbi_post.wasabbi_user = wasabbi_user
+      wasabbi_user.post_count = wasabbi_user.post_count + 1
 
       respond_to do |format|
-        if @wasabbi_post.save
+        if @wasabbi_post.save && wasabbi_user.save
           flash[:notice] = 'WasabbiPost was successfully created.'
           format.html { redirect_to(@wasabbi_post) }
           format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
         else
+          rollback_db_transaction
           format.html { render :action => "new" }
           format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
         end
@@ -79,34 +82,34 @@ class WasabbiPostsController < ApplicationController
   # PUT /wasabbi_posts/1.xml
   def update
     #ActiveRecord::Base.transaction do
-      @wasabbi_post = WasabbiPost.find(params[:id])
-      if wasabbi_user.owns? @wasabbi_post
-        @wasabbi_post.modification_quantity += 1
+    @wasabbi_post = WasabbiPost.find(params[:id])
+    if wasabbi_user.owns? @wasabbi_post
+      @wasabbi_post.modification_quantity += 1
+    else
+      mod = WasabbiModification.find_by_wasabbi_user_id(wasabbi_user.id)
+
+      unless mod
+        mod = WasabbiModification.new
+        mod.wasabbi_user = wasabbi_user
+      end
+
+      mod.quantity += 1
+      mod.save!
+    end
+
+    @wasabbi_post.modified_by = wasabbi_user
+
+    respond_to do |format|
+      if @wasabbi_post.update_attributes(params[:wasabbi_post])
+        flash[:notice] = 'WasabbiPost was successfully updated.'
+        format.html { redirect_to(@wasabbi_post) }
+        format.xml  { head :ok }
       else
-        mod = WasabbiModification.find_by_wasabbi_user_id(wasabbi_user.id)
-
-        unless mod
-          mod = WasabbiModification.new
-          mod.wasabbi_user = wasabbi_user
-        end
-
-        mod.quantity += 1
-        mod.save!
+        rollback_db_transaction
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
       end
-
-      @wasabbi_post.modified_by = wasabbi_user
-
-      respond_to do |format|
-        if @wasabbi_post.update_attributes(params[:wasabbi_post])
-          flash[:notice] = 'WasabbiPost was successfully updated.'
-          format.html { redirect_to(@wasabbi_post) }
-          format.xml  { head :ok }
-        else
-          rollback_db_transaction
-          format.html { render :action => "edit" }
-          format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
-        end
-      end
+    end
     #end
   end
 
