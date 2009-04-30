@@ -79,21 +79,21 @@ class Wasabbi
     end
 
     def wasabbi_user
-      user = wasabbi_current_user
+      return @wasabbi_wasabbi_user if @wasabbi_wasabbi_user
 
-      retval = nil
+      user = wasabbi_current_user
 
       if user
         user_id = user.send(Wasabbi.user_class.primary_key)
 
-        retval = WasabbiUser.find_by_user_id(user_id)
+        @wasabbi_wasabbi_user = WasabbiUser.find_by_user_id(user_id)
 
-        if !retval
-          retval = WasabbiUser.create(:user_id => user_id)
+        if !@wasabbi_wasabbi_user
+          @wasabbi_wasabbi_user = WasabbiUser.create(:user_id => user_id)
         end
       end
 
-      retval
+      @wasabbi_wasabbi_user
     end
 
     private
