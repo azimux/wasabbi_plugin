@@ -69,6 +69,14 @@ class WasabbiThreadsController < ApplicationController
             :forum_id => @wasabbi_thread.forum_id,
             :bumped_at => @wasabbi_thread.bumped_at
           )
+          WasabbiPost.create!(:thread_id => @wasabbi_thread.id,
+            :subject => @wasabbi_thread.subject,
+            :body => @wasabbi_thread.body,
+            :created_at => @wasabbi_thread.bumped_at,
+            :updated_at => @wasabbi_thread.bumped_at,
+            :wasabbi_user_id => @wasabbi_thread.wasabbi_user_id
+          )
+
           flash[:notice] = 'WasabbiThread was successfully created.'
           format.html { redirect_to(@wasabbi_thread) }
           format.xml  { render :xml => @wasabbi_thread, :status => :created, :location => @wasabbi_thread }
