@@ -136,7 +136,8 @@ class WasabbiForumsController < ApplicationController
 
   def first
     forum = begin
-      WasabbiForum.find(:first, :order => "id")
+      WasabbiForum.find(:first, :conditions => "parent_id IS NULL",
+        :order => "id")
     rescue ActiveRecord::RecordNotFound
     end
 
