@@ -23,10 +23,11 @@ class WasabbiThreadsController < ApplicationController
   def show
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
+      @page_of_posts = @wasabbi_thread.page_of_posts(params[:page] || 1)
 
       respond_to do |format|
         format.html # show.html.erb
-        format.xml  { render :xml => @wasabbi_thread }
+        #format.xml  { render :xml => @wasabbi_thread }
       end
     end
   end

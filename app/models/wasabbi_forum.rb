@@ -51,10 +51,11 @@ class WasabbiForum < ActiveRecord::Base
   def page_of_threads page = 1, limit = 20
     limit ||= 20
     page ||= 1
-    thread_list_entries(:offset => page * limit, :limit => limit)
+    thread_list_entries.find(:all, :offset => (page - 1) * limit, :limit => limit)
   end
 
-  [[:members_only, :inherit],
+  [
+    [:members_only, :inherit],
     [:inherits_admins, true],
     [:inherits_mods, true],
     [:show_subthreads, :inherit]
@@ -102,5 +103,30 @@ class WasabbiForum < ActiveRecord::Base
 
   def postable?
     is_postable
+  end
+
+  [
+    [:posts_per_page, 15],
+    [:threads_per_page, 15],
+  ].each do |m|
+    d = m[1]
+    m = m[0].to_s
+
+    define_method m do
+      v = string_options[m]
+
+      case v
+      when /\d+/
+        v.to_i
+      when nil
+        if parent
+          parent.send(m)
+        else
+          d
+        end
+      else
+        raise "invalid setting for '#{m}'"
+      end
+    end
   end
 end

@@ -6,7 +6,8 @@ class WasabbiThread < ActiveRecord::Base
   belongs_to :forum,  :class_name => "WasabbiForum"
 
   belongs_to :modified_by, :class_name => "WasabbiUser"
-  has_many :posts, :class_name => "WasabbiPost", :foreign_key => "thread_id"
+  has_many :posts, :class_name => "WasabbiPost", :foreign_key => "thread_id",
+    :order => "created_at"
 
   attr_accessible :subject, :body
 
@@ -50,6 +51,14 @@ class WasabbiThread < ActiveRecord::Base
   end
 
   def last_post
-    WasabbiPost.find(:first, :conditions => ["thread_id = ?", id], :order => "created_at DESC")
+    #WasabbiPost.find(:first, :conditions => ["thread_id = ?", id], :order => "created_at DESC")
+    posts.find(:first, :order => "created_at DESC")
+  end
+
+  def page_of_posts(page, per = nil)
+    per ||= forum.posts_per_page
+
+    posts.find(:all, :limit => per,
+      :offset => (page - 1) * per)
   end
 end
