@@ -196,23 +196,16 @@ class Wasabbi
               forum = begin
                 WasabbiForum.find(wasabbi_determine_forum_id)
               rescue ActiveRecord::RecordNotFound
-                nil
+                raise Wasabbi::NoForumGiven
               end
 
-              if forum
-                if forum.members_only?
-                  if !wasabbi_user.super_admin? && !wasabbi_user.member?(forum)
-                    redirect_to wasabbi_denied_member_url
-                  end
-                end
-              else
-                raise Wasabbi::NoForumGiven
+              if forum.members_only? && !wasabbi_user.can_post_in?(forum)
+                redirect_to wasabbi_denied_member_url
               end
             end
           end
         end
       end
-
     end
   end
 end

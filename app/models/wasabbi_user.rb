@@ -89,4 +89,12 @@ class WasabbiUser < ActiveRecord::Base
   def username
     user.username
   end
+
+  def can_post_in? forum
+    if forum.is_a? WasabbiThread
+      forum = forum.forum
+    end
+
+    !forum.members_only? || super_admin? || member?(forum)
+  end
 end
