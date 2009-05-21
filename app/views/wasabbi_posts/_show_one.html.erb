@@ -1,0 +1,31 @@
+<% author = post.wasabbi_user %>
+
+<div class="w_post">
+  <div class="w_post_author_g">
+    <div class="w_post_author_res">
+      <%= link_to h(author.username), wasabbi_user_path(author) -%>
+    </div>
+
+    <div class="w_post_author_data">
+      <%= h(author.rank) -%>
+    </div>
+    <div class="w_post_author_data">
+      Posts: <%= author.post_count -%>
+    </div>
+    <div class="w_post_author_data">
+      Location: <%= h(author.location) -%>
+    </div>
+  </div>
+
+  <div class="w_post_content">
+    <div class="w_post_content_header">
+      Posted: <%= post.created_at -%>
+      Post Subject: <%= h(post.subject) -%>
+      <%= link_to(
+        image_tag(Wasabbi.theme.resource_url('quote.img'),
+          :alt => "Quote"),
+        new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
+          :quote => post.id)) -%>
+    </div>
+  </div>
+</div>

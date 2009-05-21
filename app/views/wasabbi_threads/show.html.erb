@@ -1,3 +1,7 @@
+<%  @page_of_posts.each do |post|
+  render :partial => "wasabbi_posts/show_one", :locals => {:post => post}
+end %>
+
 <p>
   <b>Wasabbi user:</b>
   <%=h @wasabbi_thread.wasabbi_user_id %>
