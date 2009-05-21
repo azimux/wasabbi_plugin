@@ -1,10 +1,10 @@
 class WasabbiPostsController < ApplicationController
-
-
   wasabbi_require_login :if_public => {:except => [:index, :show]}
   #wasabbi_require_login_if_private :except => [:index, :show]
   wasabbi_require_mod :except => [:index, :show, :new, :edit, :update, :create]
   wasabbi_check_membership
+
+
 
   # GET /wasabbi_posts
   # GET /wasabbi_posts.xml
@@ -40,11 +40,31 @@ class WasabbiPostsController < ApplicationController
   # GET /wasabbi_posts/new.xml
   def new
     WasabbiPost.transaction do
-      @wasabbi_post = WasabbiPost.new
+      @wasabbi_post = WasabbiPost.new(params[:wasabbi_post])
 
-      respond_to do |format|
-        format.html # new.html.erb
-        format.xml  { render :xml => @wasabbi_post }
+      thread = WasabbiThread.find(@wasabbi_post.thread_id)
+
+      if !wasabbi_user.can_post_in?(thread)
+        redirect_to wasabbi_denied_member_url
+      else
+        if params[:quote]
+          qpost = WasabbiPost.find(params[:quote])
+          if !wasabbi_user.can_post_in?(qpost.thread)
+            redirect_to wasabbi_denied_member_url
+            return
+          end
+
+          @wasabbi_post.subject = "Re: #{qpost.subject}"
+          @wasabbi_post.subject.gsub!(/^\s*(Re:\s*){2,}/i, "Re: ")
+          @wasabbi_post.body ||= ""
+          @wasabbi_post.body = "[quote=\"#{qpost.wasabbi_user.username}\"]" +
+            qpost.body + "[/quote]" + @wasabbi_post.body
+        end
+
+        respond_to do |format|
+          format.html # new.html.erb
+          format.xml  { render :xml => @wasabbi_post }
+        end
       end
     end
   end
