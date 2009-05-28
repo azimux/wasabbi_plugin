@@ -1,0 +1,2 @@
+module WasabbiRanksHelper
+end

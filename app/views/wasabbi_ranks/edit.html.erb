@@ -1,0 +1,24 @@
+<h1>Editing wasabbi_rank</h1>
+
+<% form_for(@wasabbi_rank) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :lbound %><br />
+    <%= f.text_field :lbound %>
+  </p>
+  <p>
+    <%= f.label :rbound %><br />
+    <%= f.text_field :rbound %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @wasabbi_rank %> |
+<%= link_to 'Back', wasabbi_ranks_path %>

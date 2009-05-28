@@ -97,4 +97,12 @@ class WasabbiUser < ActiveRecord::Base
 
     !forum.members_only? || super_admin? || member?(forum)
   end
+
+  def rank
+    if custom_rank && !custom_rank.blank?
+      custom_rank
+    else
+      WasabbiRank.for_count(post_count).name
+    end
+  end
 end

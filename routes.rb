@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :wasabbi_adminships
   map.resources :wasabbi_modships
   map.resources :wasabbi_users, :only => [:show]
+  map.resources :wasabbi_ranks
 
   map.wasabbi_denied_admin "wasabbi_static/denied_admin",
     :controller => "wasabbi_static", :action => "denied_admin"
