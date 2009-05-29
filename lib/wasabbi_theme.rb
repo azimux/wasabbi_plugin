@@ -1,5 +1,6 @@
 class WasabbiTheme
   attr_accessor :name
+
   def initialize(name)
     self.name = name
   end
@@ -34,12 +35,12 @@ class WasabbiTheme
   end
 
   def img_cache
-    if @img_cache
-      @img_cache
-    else
+    if !@img_cache
       @img_cache = {}
 
-      Dir.entries(img_dir) do |p|
+      FileUtils.mkdir_p img_dir
+
+      Dir.entries(img_dir).each do |p|
         bname = File.basename(p, ".*")
 
         if File.extname(p) =~ /^\.(gif|png|jpg|jpeg|bmp)$/i
@@ -49,6 +50,8 @@ class WasabbiTheme
         end
       end
     end
+
+    @img_cache
   end
 
   def clear_img_cache
