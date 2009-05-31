@@ -1,7 +1,7 @@
 class WasabbiPost < ActiveRecord::Base
   belongs_to :thread, :class_name => "WasabbiThread"
   belongs_to :old_thread, :class_name => "WasabbiThread"
-  
+
   belongs_to :modified_by, :class_name => "WasabbiUser"
   belongs_to :wasabbi_user
 
@@ -26,6 +26,11 @@ class WasabbiPost < ActiveRecord::Base
   end
 
   def total_modifications
-    modifications.map(&:quantity).sum
+    modification_quantity +
+      (modified_by_others ? modifications.map(&:quantity).sum : 0)
+  end
+
+  def modified?
+    total_modifications > 0
   end
 end

@@ -101,36 +101,37 @@ class WasabbiPostsController < ApplicationController
   # PUT /wasabbi_posts/1
   # PUT /wasabbi_posts/1.xml
   def update
-    #ActiveRecord::Base.transaction do
-    @wasabbi_post = WasabbiPost.find(params[:id])
-    if wasabbi_user.owns? @wasabbi_post
-      @wasabbi_post.modification_quantity += 1
-    else
-      mod = WasabbiModification.find_by_wasabbi_user_id(wasabbi_user.id)
-
-      unless mod
-        mod = WasabbiModification.new
-        mod.wasabbi_user = wasabbi_user
-      end
-
-      mod.quantity += 1
-      mod.save!
-    end
-
-    @wasabbi_post.modified_by = wasabbi_user
-
-    respond_to do |format|
-      if @wasabbi_post.update_attributes(params[:wasabbi_post])
-        flash[:notice] = 'WasabbiPost was successfully updated.'
-        format.html { redirect_to(@wasabbi_post) }
-        format.xml  { head :ok }
+    ActiveRecord::Base.transaction do
+      @wasabbi_post = WasabbiPost.find(params[:id])
+      if wasabbi_user.owns? @wasabbi_post
+        @wasabbi_post.modification_quantity += 1
+        @wasabbi_post.last_modified_at = Time.now
       else
-        rollback_db_transaction
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+        @wasabbi_post.modified_by_others = true
+
+        mod = WasabbiModification.find_by_wasabbi_user_id(wasabbi_user.id)
+
+        mod ||= WasabbiModification.new(
+          :wasabbi_user => wasabbi_user
+        )
+
+        mod.quantity += 1
+        mod.updated_at = Time.now
+        mod.save!
+      end
+
+      respond_to do |format|
+        if @wasabbi_post.update_attributes(params[:wasabbi_post])
+          flash[:notice] = 'WasabbiPost was successfully updated.'
+          format.html { redirect_to(@wasabbi_post) }
+          format.xml  { head :ok }
+        else
+          rollback_db_transaction
+          format.html { render :action => "edit" }
+          format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+        end
       end
     end
-    #end
   end
 
   # DELETE /wasabbi_posts/1

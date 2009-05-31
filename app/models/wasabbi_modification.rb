@@ -6,4 +6,8 @@ class WasabbiModification < ActiveRecord::Base
     super *args
     self.quantity ||= 0
   end
+
+  def last_modified_at
+    updated_at
+  end
 end

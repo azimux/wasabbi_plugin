@@ -100,9 +100,13 @@ class WasabbiUser < ActiveRecord::Base
 
   def rank
     if custom_rank && !custom_rank.blank?
-      custom_rank
+      custom_rank.name
     else
       WasabbiRank.for_count(post_count).name
     end
+  end
+
+  def has_signature?
+    !signature.blank?
   end
 end

@@ -27,5 +27,28 @@
         new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
           :quote => post.id)) -%>
     </div>
+
+    <div class="w_post_body">
+      <%= h(post.body) %>
+    </div>
+
+    <% if author.has_signature? %>
+      <div class="w_post_sig">
+        <%= h(author.signature) %>
+      </div>
+    <% end %>
   </div>
+
+  <% if post.modified? %>
+    <div class="w_post_modified">
+      <% post.modifications.each do |mod| %>
+        <% if mod.quanity > 1 %>
+          Last modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>,
+          modified <%= mod.quantity %> times total.
+        <% else %>
+          Modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>.
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
 </div>
