@@ -1,7 +1,7 @@
 class WasabbiPostsController < ApplicationController
   wasabbi_require_login :if_public => {:except => [:index, :show]}
-  #wasabbi_require_login_if_private :except => [:index, :show]
-  wasabbi_require_mod :except => [:index, :show, :new, :edit, :update, :create]
+  wasabbi_require_mod :except => [:index, :show, :new, :edit, :update, :create],
+    :if_owner => {:except => [:edit, :destroy, :update]}
   wasabbi_check_membership
 
 
@@ -18,7 +18,7 @@ class WasabbiPostsController < ApplicationController
 
       respond_to do |format|
         format.html # index.html.erb
-        format.xml  { render :xml => @wasabbi_posts }
+        #format.xml  { render :xml => @wasabbi_posts }
       end
     end
   end
@@ -31,7 +31,7 @@ class WasabbiPostsController < ApplicationController
 
       respond_to do |format|
         format.html # show.html.erb
-        format.xml  { render :xml => @wasabbi_post }
+        #format.xml  { render :xml => @wasabbi_post }
       end
     end
   end
@@ -63,7 +63,7 @@ class WasabbiPostsController < ApplicationController
 
         respond_to do |format|
           format.html # new.html.erb
-          format.xml  { render :xml => @wasabbi_post }
+          #format.xml  { render :xml => @wasabbi_post }
         end
       end
     end
@@ -88,11 +88,11 @@ class WasabbiPostsController < ApplicationController
         if @wasabbi_post.save && wasabbi_user.save
           flash[:notice] = 'WasabbiPost was successfully created.'
           format.html { redirect_to(@wasabbi_post) }
-          format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
+          #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
         else
           rollback_db_transaction
           format.html { render :action => "new" }
-          format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+          #format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
         end
       end
     end
@@ -124,11 +124,11 @@ class WasabbiPostsController < ApplicationController
         if @wasabbi_post.update_attributes(params[:wasabbi_post])
           flash[:notice] = 'WasabbiPost was successfully updated.'
           format.html { redirect_to(@wasabbi_post) }
-          format.xml  { head :ok }
+          #format.xml  { head :ok }
         else
           rollback_db_transaction
           format.html { render :action => "edit" }
-          format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+          #format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
         end
       end
     end
@@ -139,11 +139,12 @@ class WasabbiPostsController < ApplicationController
   def destroy
     WasabbiPost.transaction do
       @wasabbi_post = WasabbiPost.find(params[:id])
+      thread = @wasabbi_post.thread
       @wasabbi_post.destroy
 
       respond_to do |format|
-        format.html { redirect_to(wasabbi_posts_url) }
-        format.xml  { head :ok }
+        format.html { redirect_to(wasabbi_thread_url(thread)) }
+        #format.xml  { head :ok }
       end
     end
   end
