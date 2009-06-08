@@ -21,11 +21,22 @@
     <div class="w_post_content_header">
       Posted: <%= post.created_at -%>
       Post Subject: <%= h(post.subject) -%>
+
       <%= link_to(
-        image_tag(Wasabbi.theme.resource_url('quote.img'),
+        image_tag(Wasabbi.theme.resource_url('quote_post.img'),
           :alt => "Quote"),
         new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
           :quote => post.id)) -%>
+      <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
+        <%= link_to(
+          image_tag(Wasabbi.theme.resource_url('edit_post.img'),
+            :alt => "Edit"),
+          edit_wasabbi_post_url(post)) -%>
+        <%= link_to(
+          image_tag(Wasabbi.theme.resource_url('delete_post.img'),
+            :alt => "Delete"),
+          post, :confirm => 'Are you sure?', :method => :delete) -%>
+      <% end %>
     </div>
 
     <div class="w_post_body">

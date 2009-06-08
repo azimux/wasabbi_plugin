@@ -1,31 +1,48 @@
+<% content_for :forum_buttons do %>
+  <%= link_to(
+    image_tag(Wasabbi.theme.resource_url('new_thread.img'),
+      :alt => "New Topic"),
+    new_wasabbi_thread_url(:wasabbi_thread => {
+        :forum_id => @wasabbi_thread.forum.id
+      })) -%>
+  <%= link_to(
+    image_tag(Wasabbi.theme.resource_url('edit_thread.img'),
+      :alt => "Reply"),
+    new_wasabbi_post_url(:wasabbi_post => {:thread_id => @wasabbi_thread.id})) -%>
+<% end %>
+
+<%= yield :forum_buttons -%>
+
 <% @page_of_posts.each do |post| %>
   <%= render :partial => "wasabbi_posts/show_one", :locals => {:post => post} %>
 <% end %>
 
-<p>
-  <b>Views:</b>
-  <%=h @wasabbi_thread.views %>
-</p>
+<%= yield :forum_buttons -%>
 
-<p>
-  <b>Replies:</b>
-  <%=h @wasabbi_thread.replies %>
-</p>
+<%#*<p>%>
+<%#*<b>Views:</b>%>
+<%#=h @wasabbi_thread.views %>
+<%#*</p>%>
 
-<p>
-  <b>Is locked:</b>
-  <%=h @wasabbi_thread.is_locked %>
-</p>
+<%#*<p>%>
+<%#*<b>Replies:</b>%>
+<%#=h @wasabbi_thread.replies %>
+<%#*</p>%>
 
-<p>
-  <b>Is deleted:</b>
-  <%=h @wasabbi_thread.is_deleted %>
-</p>
+<%#*<p>%>
+<%#*<b>Is locked:</b>%>
+<%#=h @wasabbi_thread.is_locked %>
+<%#*</p>%>
 
-<p>
-  <b>Body:</b>
-  <%=h @wasabbi_thread.body %>
-</p>
+<%#*<p>%>
+<%#*<b>Is deleted:</b>%>
+<%#=h @wasabbi_thread.is_deleted %>
+<%#*</p>%>
+
+<%#*<p>%>
+<%#*<b>Body:</b>%>
+<%#=h @wasabbi_thread.body %>
+<%#*</p>%>
 
 <%= link_to 'Edit', edit_wasabbi_thread_path(@wasabbi_thread) %> |
 <%= link_to 'Back', wasabbi_threads_path %>
