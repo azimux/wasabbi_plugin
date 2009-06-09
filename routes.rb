@@ -10,10 +10,12 @@ ActionController::Routing::Routes.draw do |map|
 
   map.wasabbi_denied_admin "wasabbi_static/denied_admin",
     :controller => "wasabbi_static", :action => "denied_admin"
-  map.wasabbi_denied_mod "wasabbi_static/denied_admin",
+  map.wasabbi_denied_mod "wasabbi_static/denied_mod",
     :controller => "wasabbi_static", :action => "denied_mod"
   map.wasabbi_denied_member "wasabbi_static/denied_member",
     :controller => "wasabbi_static", :action => "denied_member"
+  map.wasabbi_not_last "wasabbi_static/cant_delete_not_last",
+    :controller => "wasabbi_static", :action => "cant_delete_not_last"
 
   map.wasabbi_problem "wasabbi_problem",
     :controller => "wasabbi_problems", :action => "show"

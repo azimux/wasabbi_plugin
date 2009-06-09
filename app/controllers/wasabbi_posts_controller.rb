@@ -4,8 +4,6 @@ class WasabbiPostsController < ApplicationController
     :if_owner => {:except => [:edit, :destroy, :update]}
   wasabbi_check_membership
 
-
-
   # GET /wasabbi_posts
   # GET /wasabbi_posts.xml
   def index
@@ -87,7 +85,7 @@ class WasabbiPostsController < ApplicationController
       respond_to do |format|
         if @wasabbi_post.save && wasabbi_user.save
           flash[:notice] = 'WasabbiPost was successfully created.'
-          format.html { redirect_to(@wasabbi_post) }
+          format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread, :post_id => @wasabbi_post.id)) }
           #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
         else
           rollback_db_transaction
@@ -140,11 +138,21 @@ class WasabbiPostsController < ApplicationController
     WasabbiPost.transaction do
       @wasabbi_post = WasabbiPost.find(params[:id])
       thread = @wasabbi_post.thread
-      @wasabbi_post.destroy
 
-      respond_to do |format|
-        format.html { redirect_to(wasabbi_thread_url(thread)) }
-        #format.xml  { head :ok }
+      if thread.last_post != @wasabbi_post
+        redirect_to(wasabbi_not_last_url(:post_id => @wasabbi_post.id))
+      else
+        @wasabbi_post.destroy
+
+        if thread.posts(true).count == 0
+          thread.thread_list_entries.destroy_all
+          thread.destroy
+        end
+
+        respond_to do |format|
+          format.html { redirect_to(wasabbi_thread_url(thread, :post_id => @wasabbi_post.id)) }
+          #format.xml  { head :ok }
+        end
       end
     end
   end

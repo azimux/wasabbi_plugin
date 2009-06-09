@@ -1,0 +1,5 @@
+You cannot delete this post because it is not the last post in the thread anymore.
+
+<% form_tag wasabbi_thread_path(@post.thread, :post_id => @post.id) do |f| %>
+  <%= f.submit "OK" %>
+<% end %>
