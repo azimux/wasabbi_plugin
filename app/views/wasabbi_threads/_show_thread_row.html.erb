@@ -1,12 +1,23 @@
-<%=  link_to h(thread.subject), wasabbi_thread_path(thread) %>
+<tr>
+  <td>
+    <%= link_to h(thread.subject), wasabbi_thread_path(thread) %>
+  </td>
 
-<%= h(thread.replies) %>
+  <td>
+    <%= h(thread.replies) %>
+  </td>
 
-<%= link_to h(thread.wasabbi_user.username), wasabbi_user_path(thread.wasabbi_user) %>
+  <td>
+    <%= link_to h(thread.wasabbi_user.username), wasabbi_user_path(thread.wasabbi_user) %>
+  </td>
 
-<%= h(thread.views) %>
+  <td>
+    <%= h(thread.views) %>
+  </td>
 
-<%= h(thread.bumped_at) %><br/>
-<%= h(thread.last_post.wasabbi_user.username) %>
-<%= link_to h(thread.last_post.wasabbi_user.username),
-  wasabbi_user_path(thread.last_post.wasabbi_user.username) %>
+  <td>
+    <%= h(thread.bumped_at) %><br/>
+    <%= link_to h(thread.last_post.wasabbi_user.username),
+      wasabbi_user_path(thread.last_post.wasabbi_user.username) %>
+  </td>
+</tr>

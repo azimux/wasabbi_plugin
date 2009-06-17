@@ -38,9 +38,11 @@
     :locals => {:forum => f} %>
 <% end %>
 
-<% forum.page_of_threads(@page, session[:items_per_page]).each do |tle| %>
-  <%= render :partial => "wasabbi_threads/show_thread_row",
-    :locals => {:thread => tle.thread} %>
+<% thread_table_tag do %>
+  <% forum.page_of_threads(@page, session[:items_per_page]).each do |tle| %>
+    <%= render :partial => "wasabbi_threads/show_thread_row",
+      :locals => {:thread => tle.thread} %>
+  <% end %>
 <% end %>
 
 <% if forum.postable? %>

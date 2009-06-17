@@ -8,4 +8,27 @@ module ApplicationHelper
     #XXX
     ""
   end
+
+  def thread_table_tag(&block)
+    concat("<table>
+  <th>
+    Threads
+  </th>
+  <th>
+    Replies
+  </th>
+  <th>
+    Author
+  </th>
+  <th>
+    Views
+  </th>
+  <th>
+    Last Post
+  </th>
+  <tbody>
+    #{capture(&block)}
+  </tbody>
+</table>")
+  end
 end
