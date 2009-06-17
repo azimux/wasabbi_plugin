@@ -23,6 +23,11 @@ class WasabbiThread < ActiveRecord::Base
     end
   end
 
+  def recalc_replies!
+    self.replies = posts(true).count - 1
+    save!
+  end
+
   def move_to(forum)
     f = forum
     tles = []

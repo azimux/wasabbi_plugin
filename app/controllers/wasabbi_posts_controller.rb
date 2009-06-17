@@ -83,7 +83,7 @@ class WasabbiPostsController < ApplicationController
       wasabbi_user.post_count = wasabbi_user.post_count + 1
 
       respond_to do |format|
-        if @wasabbi_post.save && wasabbi_user.save
+        if @wasabbi_post.save && wasabbi_user.save && @wasabbi_post.thread.recalc_replies!
           flash[:notice] = 'WasabbiPost was successfully created.'
           format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread, :post_id => @wasabbi_post.id)) }
           #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
@@ -143,6 +143,7 @@ class WasabbiPostsController < ApplicationController
         redirect_to(wasabbi_not_last_url(:post_id => @wasabbi_post.id))
       else
         @wasabbi_post.destroy
+        thread.recalc_replies!
 
         if thread.posts(true).count == 0
           thread.thread_list_entries.destroy_all
