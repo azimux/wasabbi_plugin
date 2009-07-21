@@ -55,12 +55,12 @@ class WasabbiPostsController < ApplicationController
           @wasabbi_post.subject = "Re: #{qpost.subject}"
           @wasabbi_post.subject.gsub!(/^\s*(Re:\s*){2,}/i, "Re: ")
           @wasabbi_post.body ||= ""
-          @wasabbi_post.body = "[quote=\"#{qpost.wasabbi_user.username}\"]" +
+          @wasabbi_post.body = "[quote=#{qpost.wasabbi_user.username}]" +
             qpost.body + "[/quote]" + @wasabbi_post.body
         end
 
         respond_to do |format|
-          format.html # new.html.erb
+          format.html
           #format.xml  { render :xml => @wasabbi_post }
         end
       end
@@ -101,6 +101,7 @@ class WasabbiPostsController < ApplicationController
   def update
     ActiveRecord::Base.transaction do
       @wasabbi_post = WasabbiPost.find(params[:id])
+
       if wasabbi_user.owns? @wasabbi_post
         @wasabbi_post.modification_quantity += 1
         @wasabbi_post.last_modified_at = Time.now
@@ -121,7 +122,8 @@ class WasabbiPostsController < ApplicationController
       respond_to do |format|
         if @wasabbi_post.update_attributes(params[:wasabbi_post])
           flash[:notice] = 'WasabbiPost was successfully updated.'
-          format.html { redirect_to(@wasabbi_post) }
+          format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread,
+                :post_id => @wasabbi_post.id)) }
           #format.xml  { head :ok }
         else
           rollback_db_transaction

@@ -15,12 +15,15 @@ class WasabbiPost < ActiveRecord::Base
 
     if modification_quantity > 0
       retval << WasabbiModification.new(:wasabbi_user_id => wasabbi_user,
-        :quantity => modification_quantity)
+        :quantity => modification_quantity,
+        :updated_at => last_modified_at)
     end
 
     if modified_by_others
       retval << wasabbi_modifications
     end
+
+    retval.sort {|a,b| a.updated_at <=> b.updated_at}
 
     retval
   end

@@ -1,4 +1,5 @@
-<% author = post.wasabbi_user %>
+<% author = post.wasabbi_user
+require 'bb-ruby' %>
 
 <div class="w_post">
   <div class="w_post_author_g">
@@ -40,7 +41,7 @@
     </div>
 
     <div class="w_post_body">
-      <%= h(post.body) %>
+      <%= h(post.body).bbcode_to_html %>
     </div>
 
     <% if author.has_signature? %>
@@ -52,13 +53,13 @@
 
   <% if post.modified? %>
     <div class="w_post_modified">
-      <% post.modifications.each do |mod| %>
-        <% if mod.quanity > 1 %>
-          Last modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>,
-          modified <%= mod.quantity %> times total.
-        <% else %>
-          Modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>.
-        <% end %>
+      <% mod = post.modifications.last %>
+
+      <% if post.total_modifications > 1 %>
+        Last modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>,
+        modified <%= post.total_modifications %> times total.
+      <% else %>
+        Modified by <%= mod.wasabbi_user.username %> at <%= mod.last_modified_at %>.
       <% end %>
     </div>
   <% end %>
