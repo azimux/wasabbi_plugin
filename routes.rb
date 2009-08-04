@@ -17,6 +17,9 @@ ActionController::Routing::Routes.draw do |map|
   map.wasabbi_not_last "wasabbi_static/cant_delete_not_last",
     :controller => "wasabbi_static", :action => "cant_delete_not_last"
 
+  map.wasabbi_file "vendor/plugins/wasabbi_plugin/*file_parts", :action => "send_file_data",
+    :controller => "wasabbi_file"
+
   map.wasabbi_problem "wasabbi_problem",
     :controller => "wasabbi_problems", :action => "show"
   # The priority is based upon order of creation: first created -> highest priority.
