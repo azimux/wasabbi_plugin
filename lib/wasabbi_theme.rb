@@ -9,16 +9,20 @@ class WasabbiTheme
     resource_url('stylesheet.css')
   end
 
+  def theme_path_parts
+    ['themes', name]
+  end
+
   def theme_dir
-    File.join Wasabbi.wasabbi_root, 'themes', name
+    File.join Wasabbi.wasabbi_root, *theme_path_parts
   end
 
   def img_dir
-    File.join Wasabbi.wasabbi_root, 'themes', name, 'images'
+    File.join theme_dir, 'images'
   end
 
   def theme_url
-    "/vendor/plugins/wasabbi_plugin/themes/#{name}"
+    "/vendor/plugins/wasabbi_plugin/#{theme_path_parts.join("/")}"
   end
 
   private
