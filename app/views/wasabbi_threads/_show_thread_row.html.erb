@@ -1,5 +1,5 @@
-<tr class="w_thread_row">
-  <td>
+<tr>
+  <td class="w_first">
     <%= link_to h(thread.subject), wasabbi_thread_path(thread) %>
   </td>
 
@@ -15,9 +15,16 @@
     <%= h(thread.views) %>
   </td>
 
-  <td>
+  <td class="w_last">
     <%= h(thread.bumped_at) %><br/>
     <%= link_to h(thread.last_post.wasabbi_user.username),
       wasabbi_user_path(thread.last_post.wasabbi_user.username) %>
   </td>
 </tr>
+
+<% if with_gap %>
+  <tr class="w_gap">
+    <td>
+    </td>
+  </tr>
+<% end %>

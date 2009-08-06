@@ -44,7 +44,8 @@
   <% thread_table_tag do %>
     <% show_threads.each do |tle| %>
       <%= render :partial => "wasabbi_threads/show_thread_row",
-        :locals => {:thread => tle.thread} %>
+        :locals => {:thread => tle.thread,
+      :with_gap => (tle != show_threads.last)} %>
     <% end %>
   <% end %>
 <% end %>

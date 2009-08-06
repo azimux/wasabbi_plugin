@@ -10,7 +10,7 @@ module ApplicationHelper
   end
 
   def thread_table_tag(&block)
-    concat("<table>
+    concat("<table class='w_thread_table'>
   <th>
     Threads
   </th>

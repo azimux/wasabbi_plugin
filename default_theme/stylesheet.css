@@ -1,7 +1,40 @@
 .w_post {
     border: 1px solid black;
+    padding: 4px;
+    margin: 2px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
-.w_thread_row {
-    border: 1px solid black;
+table.w_thread_table {
+    border-collapse: collapse;
 }
+
+table.w_thread_table tr td {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-right: 0px;
+    border-left: 0px;
+    margin-top: 2px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+
+table.w_thread_table tr.w_gap td {
+    border-right: 0px;
+    border-left: 0px;
+    height: 5px;
+}
+
+
+table.w_thread_table tr td.w_first {
+    border-left: 1px solid black;
+    padding-left: 4px;
+}
+
+table.w_thread_table tr td.w_last {
+    border-right: 1px solid black;
+    padding-right: 4px;
+}
+
