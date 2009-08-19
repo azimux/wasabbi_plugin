@@ -1,0 +1,6 @@
+<% if !forum.name.blank? && !forum.description.blank? %>
+  <p>
+    <b><%= h forum.name -%>:</b>
+    <%=h forum.description %>
+  </p>
+<% end %>
