@@ -1,3 +1,6 @@
+<%= render :partial => "wasabbi_forums/crumbs",
+  :locals => {:forum => @wasabbi_thread.forum} %>
+
 <% content_for :forum_buttons do %>
   <%= link_to(
     image_tag(Wasabbi.theme.resource_url('new_thread.img'),
