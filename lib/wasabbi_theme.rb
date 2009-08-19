@@ -25,6 +25,10 @@ class WasabbiTheme
     "/vendor/plugins/wasabbi_plugin/#{theme_path_parts.join("/")}"
   end
 
+  def image_exists? image
+    img_lookup image
+  end
+
   private
   def img_lookup img
     img = img.gsub(/\.img$/, "")
@@ -64,7 +68,7 @@ class WasabbiTheme
   public
 
   def resource_url resource
-    if resource =~ /\.img$/
+    if resource =~ /\.img\s*$/
       "#{theme_url}/images/#{img_lookup(resource)}"
     else
       "#{theme_url}/#{resource}"

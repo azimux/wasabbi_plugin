@@ -3,10 +3,8 @@
 <%= render :partial => "wasabbi_forums/crumbs",
   :locals => {:forum => @wasabbi_forum} %>
 
-<p>
-  <b>Description:</b>
-  <%=h forum.description %>
-</p>
+<% render :partial => "wasabbi_forums/forum_name",
+  :locals => {:forum => forum} %>
 
 <% if wasabbi_admin? forum %>
   <%= link_to "Create new forum under #{h forum.name}",
@@ -25,9 +23,13 @@
     :confirm => 'Are you sure?', :method => :delete %><br/>
 <% end %>
 
-<% if forum.postable? %>
-  <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
+<% thread_controls = proc do %>
+  <% if forum.postable? %>
+    <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
+  <% end %>
 <% end %>
+
+<% thread_controls.call %>
 
 <% forum.subcategories.each do |cat| %>
   <%= render :partial => "wasabbi_categories/show",
@@ -45,11 +47,9 @@
     <% show_threads.each do |tle| %>
       <%= render :partial => "wasabbi_threads/show_thread_row",
         :locals => {:thread => tle.thread,
-      :with_gap => (tle != show_threads.last)} %>
+        :with_gap => (tle != show_threads.last)} %>
     <% end %>
   <% end %>
 <% end %>
 
-<% if forum.postable? %>
-  <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
-<% end %>
+<% thread_controls.call %>

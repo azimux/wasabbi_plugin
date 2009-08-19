@@ -1,3 +1,15 @@
+.w_forum_row {
+    border: 1px solid black;
+    padding: 4px;
+    margin: 2px;
+}
+
+.w_text_button {
+    border: 1px solid black;
+    padding: 4px;
+    margin: 2px;
+}
+
 .w_post {
     border: 1px solid black;
     padding: 4px;
