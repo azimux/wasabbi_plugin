@@ -18,7 +18,9 @@
 
   <br/>
   <%= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
-  <%= link_to 'Back', wasabbi_forums_path %> |
+  <% if forum && forum.parent_id %>
+    <%= link_to 'Up', wasabbi_forum_path(forum.parent_id) %> |
+  <% end %>
   <%= link_to "Destroy this forum (#{h forum.name})", forum,
     :confirm => 'Are you sure?', :method => :delete %><br/>
 <% end %>

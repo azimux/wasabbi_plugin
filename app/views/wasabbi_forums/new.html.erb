@@ -3,4 +3,7 @@
 <%= render :partial => "wasabbi_forums/new_or_edit",
   :locals => {:forum => @wasabbi_forum, :submit => "Create" } %>
 
-<%= link_to 'Back', wasabbi_forums_path %>
+<% forum = @wasabbi_forum %>
+<% if forum && forum.parent %>
+  <%= link_to 'Back', wasabbi_forum_path(forum) %> |
+<% end %>

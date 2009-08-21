@@ -3,4 +3,4 @@
 <%= render :partial => "wasabbi_threads/new_or_edit",
   :locals => {:thread => @wasabbi_thread, :submit => "Create"} %>
 
-<%= link_to 'Back', wasabbi_threads_path %>
+<%= link_to 'Back', wasabbi_forum_path(@wasabbi_thread.forum_id) %>

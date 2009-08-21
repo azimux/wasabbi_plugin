@@ -4,4 +4,4 @@
   :locals => {:thread => @wasabbi_thread, :submit => "Update"} %>
 
 <%= link_to 'Show', @wasabbi_thread %> |
-<%= link_to 'Back', wasabbi_threads_path %>
+<%= link_to 'Back', wasabbi_forum_path(@wasabbi_thread.forum_id) %>

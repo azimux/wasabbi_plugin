@@ -1,3 +1,5 @@
+require 'socket'
+
 class WasabbiThreadsController < ApplicationController
   wasabbi_require_login :if_public => {:except => [:index, :show]}
   wasabbi_require_mod :except => [:index, :show, :create, :new],
@@ -24,6 +26,23 @@ class WasabbiThreadsController < ApplicationController
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
       @page_of_posts = @wasabbi_thread.page_of_posts(params[:page] || 1)
+
+      host = Socket.getaddrinfo(request.remote_ip, nil).last[2]
+
+      masks = [
+        /googlebot.com$/,
+        /cuill.com$/,
+      ]
+
+      unless masks.map {|p| host =~ p}.any? ||
+          request.env['HTTP_REFERER'] =~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
+        @wasabbi_thread.views += 1
+        @wasabbi_thread.save!
+      end
+
+      #      request.remote_ip
+      #      page_hit.ref = request.env['HTTP_REFERER']
+      #      page_hit.host = request.env['HTTP_HOST']
 
       respond_to do |format|
         format.html # show.html.erb
