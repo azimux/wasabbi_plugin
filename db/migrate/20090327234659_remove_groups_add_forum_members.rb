@@ -1,6 +1,7 @@
 class RemoveGroupsAddForumMembers < ActiveRecord::Migration
   def self.up
     ActiveRecord::Base.transaction do
+      drop_table :wasabbi_required_groups
       drop_table :wasabbi_members
       drop_table :wasabbi_groups
 
