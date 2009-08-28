@@ -5,5 +5,5 @@
 
 <% forum = @wasabbi_forum %>
 <% if forum && forum.parent %>
-  <%= link_to 'Back', wasabbi_forum_path(forum) %> |
+  <%= link_to 'Back', wasabbi_forum_path(forum.parent) %> |
 <% end %>
