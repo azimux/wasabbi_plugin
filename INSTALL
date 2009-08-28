@@ -1,0 +1,114 @@
+Steps for installing the WasaBBi plugin
+
+1.  Install the engines plugin.  You might need to use the edge branch of
+git://github.org/azimux/engines.git  I made some changes to the migrations
+and don't think my patch ever made it back into the projects main repository.
+
+This install file will be based on the azimux/engines repository.  If you use
+the main engines repository with success, please let me know.  (Hopefully it's as
+simple as just running the rake task to copy the migrations over.)
+
+If you are using externals to manage subprojects, you can install engines by running:
+
+ext install -b edge git://github.com/azimux/externals.git
+
+2.  Run the engines boot script in your environment.rb, right after the line
+
+require File.join(File.dirname(__FILE__), 'boot')
+
+add:
+
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
+
+3.  Install the plugin
+
+You can use: ext install git://github.com/azimux/wasabbi_plugin.git
+
+or any other manner you wish to use to get it into your vendor/plugins directory
+
+4.  Install ax_user or code your own user model
+
+You can use: ext install git://github.com/azimux/ax_user.git
+
+Or you can code your own user object (perhaps your project already has one)
+
+5.  Connect ax_user (or your user model) to wasabbi.  In environment.rb, inside
+of your after_initialize block, you'll need to add this, or something like this
+if using your own model.
+
+  config.after_initialize do
+    Wasabbi.user_class = User
+    Wasabbi::AppHelper.module_eval do
+      def wasabbi_login_url
+        raise "should be bypassed"
+      end
+
+      def wasabbi_current_user
+        user
+      end
+
+      if !instance_methods.include?('wasabbi_check_authentication')
+        raise "WasaBBi's AppHelper not yet included"
+      else
+        def wasabbi_check_authentication
+          check_authentication
+        end
+      end
+    end
+  end
+
+If you are using ax_user you can use this exact code.  Otherwise, code the following:
+
+wasabbi_login_url
+
+This method should return the URL of a page with a signin form
+
+wasabbi_current_user
+
+This method should return the current object representing the logged in user.
+
+Here's an example of what such a method might look like:
+
+    def wasabbi_current_user
+      if session[:user]
+        @user ||= begin
+          User.find(session[:user])
+        rescue ActiveRecord::RecordNotFound
+        end
+      else
+        @user = nil
+      end
+      @user
+    end
+
+wasabbi_check_authentication
+
+This method should redirect_to to wherever you want if the user is not signed in.
+It's simply a before filter to make sure the user is logged in.
+
+Here's an example of what such a method might look like:
+
+    def wasabbi_check_authentication
+      if !session[:user]
+        redirect_to :controller => "user", :action => "signin"
+      end
+    end
+
+4.  Connect the routes.  In your routes.rb, add the following to the top of the
+block passed to draw:
+
+map.from_plugin :ax_user #(only if you're using ax_user, of course)
+map.from_plugin :wasabbi_plugin
+
+5.  Install remaining required plugins:
+
+git://github.com/azimux/string_hash_association.git
+git://github.com/azimux/ax_lib.git
+
+Optional, (probably required at this time, but that'd be a bug) but highly recommended:
+
+http://redhillonrails.rubyforge.org/svn/trunk/vendor/plugins/redhillonrails_core
+http://redhillonrails.rubyforge.org/svn/trunk/vendor/plugins/foreign_key_migrations
+
+6.  Migrate the plugins by issuing a rake db:migrate:all
+
