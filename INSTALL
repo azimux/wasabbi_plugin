@@ -112,3 +112,8 @@ http://redhillonrails.rubyforge.org/svn/trunk/vendor/plugins/foreign_key_migrati
 
 6.  Migrate the plugins by issuing a rake db:migrate:all
 
+7.  Add the theme stylesheet link to your layout(s)  I just place it in my
+layouts/application.html.erb file inside <head></head>, but feel free to get
+fancy if you'd like:
+
+<%= wasabbi_theme_stylesheet %>
