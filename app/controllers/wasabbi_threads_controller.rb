@@ -34,10 +34,25 @@ class WasabbiThreadsController < ApplicationController
         /cuill.com$/,
       ]
 
-      unless masks.map {|p| host =~ p}.any? ||
-          request.env['HTTP_REFERER'] =~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
-        @wasabbi_thread.views += 1
-        @wasabbi_thread.save!
+      unless masks.map {|p| host =~ p}.any?
+        ref = request.env['HTTP_REFERER']
+        path = nil
+
+        if !ref.nil?
+          begin
+            path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path)
+          rescue URI::InvalidURIError, ActionController::RoutingError
+          rescue Exception => e
+            puts e
+            raise e
+          end
+        end
+
+        if path.nil? || path[:controller] != controller_name
+          #=~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
+          @wasabbi_thread.views += 1
+          @wasabbi_thread.save!
+        end
       end
 
       #      request.remote_ip
