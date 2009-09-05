@@ -40,7 +40,7 @@ class WasabbiThreadsController < ApplicationController
 
         if !ref.nil?
           begin
-            path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path)
+            path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path, :method => :get)
           rescue URI::InvalidURIError, ActionController::RoutingError
           rescue Exception => e
             puts e

@@ -10,5 +10,9 @@ class Wasabbi
     File.join(File.dirname(__FILE__), '..')
   end
 
-  cattr_accessor :user_class
+  cattr_accessor :user_class, :path_prefix
+
+  def self.path_prefix
+    @path_prefix || 'wasaBBi'
+  end
 end

@@ -1,12 +1,24 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :wasabbi_forum_string_options
-  map.resources :wasabbi_forums
-  map.resources :wasabbi_threads
-  map.resources :wasabbi_posts
-  map.resources :wasabbi_adminships
-  map.resources :wasabbi_modships
-  map.resources :wasabbi_users, :only => [:show]
-  map.resources :wasabbi_ranks
+  [["forum_string_options"],
+   ["forums"],
+   ["threads"],
+   ["posts"],
+   ["adminships"],
+   ["modships"],
+   ["users", {:only => [:show]}],
+   ["ranks"]].each do |resource, options|
+    map.resources "wasabbi_#{resource}", 
+      (options || {}).merge({:as => resource, :path_prefix => "/#{Wasabbi.path_prefix}"})
+  end
+
+#  map.resources :wasabbi_forum_string_options
+#  map.resources :wasabbi_forums
+#  map.resources :wasabbi_threads
+#  map.resources :wasabbi_posts, :as => "posts", :path_prefix => "/#{Wasabbi.path_prefix}"
+#  map.resources :wasabbi_adminships
+#  map.resources :wasabbi_modships
+#  map.resources :wasabbi_users, :only => [:show]
+#  map.resources :wasabbi_ranks
 
   map.wasabbi_denied_admin "wasabbi_static/denied_admin",
     :controller => "wasabbi_static", :action => "denied_admin"
