@@ -18,6 +18,22 @@
     margin-bottom: 10px;
 }
 
+.w_post_content {
+}
+
+.w_post_content_header {
+}
+
+.w_post_buttons {
+    display: inline;
+}
+
+.w_post_author_g {
+    float: left;
+    margin-right: 20px;
+}
+
+
 table.w_thread_table {
     border-collapse: collapse;
 }
