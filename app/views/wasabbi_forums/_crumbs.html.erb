@@ -1,18 +1,20 @@
-<%
-forums = [forum]
-parent = forum.parent
+<div class="w_crumbs">
+  <%
+  forums = [forum]
+  parent = forum.parent
 
-while parent
-  forums << parent unless parent.is_category
-  parent = parent.parent 
-end
+  while parent
+    forums << parent unless parent.is_category
+    parent = parent.parent
+  end
 
-while !forums.empty?
-  forum = forums.pop %>
+  while !forums.empty?
+    forum = forums.pop %>
 
-  <%= link_to(h(forum.name), wasabbi_forum_url(forum)) -%>
+    <%= link_to(h(forum.name), wasabbi_forum_url(forum)) -%>
 
-  <% if !forums.empty? %>
-    ->
-  <% end
-end %>
+    <% if !forums.empty? %>
+      ->
+    <% end
+  end %>
+</div>

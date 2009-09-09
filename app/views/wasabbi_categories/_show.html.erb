@@ -1,13 +1,15 @@
 
-<% render :partial => "wasabbi_forums/forum_name",
-  :locals => {:forum => category} %>
+<div class="w_category">
+  <%= render :partial => "wasabbi_forums/forum_name",
+    :locals => {:forum => category} %>
 
-<%#= link_to category.name, wasabbi_forum_path(category) %><br/>
-<%#= category.description %>
+  <%#= link_to category.name, wasabbi_forum_path(category) %><br/>
+  <%#= category.description %>
 
-<% category.children.each do |f| %>
-  <%= render :partial => "wasabbi_forums/show_forum",
-    :locals => {:forum => f} %><br/>
-<% end %>
+  <% category.children.each do |f| %>
+    <%= render :partial => "wasabbi_forums/show_forum",
+      :locals => {:forum => f} %><br/>
+  <% end %>
+</div>
 
 

@@ -1,12 +1,13 @@
 <% forum = @wasabbi_forum %>
 
 <%= render :partial => "wasabbi_forums/crumbs",
-  :locals => {:forum => @wasabbi_forum} %>
+  :locals => {:forum => @wasabbi_forum} %><br/>
 
-<% render :partial => "wasabbi_forums/forum_name",
+<%= render :partial => "wasabbi_forums/forum_name",
   :locals => {:forum => forum} %>
 
 <% if wasabbi_admin? forum %>
+  <br/>
   <%= link_to "Create new forum under #{h forum.name}",
     new_wasabbi_forum_path(:wasabbi_forum => {
       :parent_id => forum.id
@@ -27,7 +28,8 @@
 
 <% thread_controls = proc do %>
   <% if forum.postable? %>
-    <%= link_to 'New thread', new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) %><br/>
+    <%= wasabbi_button "New Thread",
+      new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%><br/>
   <% end %>
 <% end %>
 
@@ -44,7 +46,12 @@
 
 <% show_threads = forum.page_of_threads(@page, session[:items_per_page]) %>
 
-<% unless show_threads.empty? %>
+<% if show_threads.empty? %>
+  <div class="w_no_threads">No threads have been created in this forum yet.
+  To be the first to start a discussion,
+    <%= link_to "Click Here!", new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%>
+  </div>
+<% else %>
   <% thread_table_tag do %>
     <% show_threads.each do |tle| %>
       <%= render :partial => "wasabbi_threads/show_thread_row",

@@ -16,25 +16,24 @@ require 'bb-ruby' %>
     <div class="w_post_author_data">
       Location: <%= h(author.location) -%>
     </div>
-  </div>
-
-  <div class="w_post_content">
+  </div><div class="w_post_content">
     <div class="w_post_content_header">
-        Posted: <%= post.created_at -%>
-        Post Subject: <%= h(post.subject) -%>
-      
-      <div class="w_post_buttons">
-        <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
-          :quote => post.id)
-        -%>
-        <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
-          <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
+      Posted: <%= post.created_at -%>
+      Post Subject: <%= h(post.subject) -%>
 
-          <%= wasabbi_button "Delete", wasabbi_post_path(post),
-            :confirm => 'Are you sure?', :method => :delete -%>
-        <% end %>
-      </div>
     </div>
+    <div class="w_post_buttons">
+      <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
+        :quote => post.id)
+      -%>
+      <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
+        <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
+
+        <%= wasabbi_button "Delete", wasabbi_post_path(post),
+          :confirm => 'Are you sure?', :method => :delete -%>
+      <% end %>
+    </div>
+
 
     <div class="w_post_body">
       <%= h(post.body).bbcode_to_html %>
@@ -61,9 +60,9 @@ require 'bb-ruby' %>
       <% end %>
     </div>
   <% end %>
-<div style="clear:both">
-</div>
-  
+  <div style="clear:both">
+  </div>
+
 </div>
 <div style="clear:both">
 </div>

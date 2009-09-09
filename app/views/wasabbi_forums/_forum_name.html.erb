@@ -1,6 +1,4 @@
-<% if !forum.name.blank? && !forum.description.blank? %>
-  <p>
-    <b><%= h forum.name -%>:</b>
-    <%=h forum.description %>
-  </p>
-<% end %>
+
+<b><%= link_to h(forum.name), wasabbi_forum_path(forum) -%>:</b>
+<%=h forum.description %>
+

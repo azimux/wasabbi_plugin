@@ -1,5 +1,10 @@
-.w_forum_row {
+.w_forum_row, .w_category {
     border: 1px solid black;
+    padding: 4px;
+    margin: 2px;
+}
+
+.w_crumbs {
     padding: 4px;
     margin: 2px;
 }
@@ -8,6 +13,9 @@
     border: 1px solid black;
     padding: 4px;
     margin: 2px;
+}
+
+.w_thread_buttons {
 }
 
 .w_post {
@@ -19,18 +27,26 @@
 }
 
 .w_post_content {
+    float: left;
+    width: 79%;
+    border-left: 1px solid #DDDDDD;
+    padding-left: 5px;
+    margin-left: 0px;
 }
 
 .w_post_content_header {
+    float: left;
 }
 
 .w_post_buttons {
-    display: inline;
+    float: right;
 }
 
 .w_post_author_g {
+    width: 20%;
     float: left;
-    margin-right: 20px;
+    background: #DDDDDD;
+    margin-right: 0px;
 }
 
 

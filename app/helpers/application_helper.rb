@@ -38,7 +38,7 @@ module ApplicationHelper
       image_path = nil
     end
 
-    image_path ||= "#{name}.img"
+    image_path ||= "#{name.downcase.gsub(/\s*/,"_")}.img"
 
     image_exists = Wasabbi.theme.image_exists?(image_path)
 
