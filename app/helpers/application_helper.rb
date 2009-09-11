@@ -53,4 +53,8 @@ module ApplicationHelper
       #{link_to(link_text, url, options)}
     </span>"
   end
+
+  def wasabbi_url
+    top_wasabbi_forums_url
+  end
 end

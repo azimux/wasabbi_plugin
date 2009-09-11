@@ -1,7 +1,7 @@
 class WasabbiForumsController < ApplicationController
-  wasabbi_require_login :except => :first, :if_public => {:except => [:show]}
-  wasabbi_require_admin :except => [:show,:first]
-  wasabbi_check_membership :except => [:first]
+  wasabbi_require_login :except => :top, :if_public => {:except => [:show]}
+  wasabbi_require_admin :except => [:show,:top]
+  wasabbi_check_membership :except => [:top]
 
   # GET /forums
   # GET /forums.xml
@@ -28,7 +28,7 @@ class WasabbiForumsController < ApplicationController
           format.xml  { render :xml => @wasabbi_forum }
         end
       else
-        redirect_to :action => "first"
+        redirect_to top_wasabbi_forums_url
       end
     end
   end
@@ -134,7 +134,7 @@ class WasabbiForumsController < ApplicationController
     end
   end
 
-  def first
+  def top
     forum = begin
       WasabbiForum.find(:first, :conditions => "parent_id IS NULL",
         :order => "id")
