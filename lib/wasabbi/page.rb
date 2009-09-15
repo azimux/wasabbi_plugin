@@ -3,7 +3,7 @@ class Wasabbi
     attr_accessor :items, :page, :items_per_page, :total_items
 
     def total_pages
-      (total_items / items_per_page) + 1
+      ([total_items - 1, 0].max / items_per_page) + 1
     end
 
     def initialize items, total_items, page, items_per_page = 20
