@@ -48,10 +48,13 @@ class WasabbiForum < ActiveRecord::Base
     children.select {|child| !child.is_category}
   end
 
-  def page_of_threads page = 1, limit = 20
-    limit ||= 20
-    page ||= 1
+  def page_of_threads page = 1, limit = 25
+    page = page.to_i
     thread_list_entries.find(:all, :offset => (page - 1) * limit, :limit => limit)
+  end
+
+  def thread_count
+    thread_list_entries.count
   end
 
   [

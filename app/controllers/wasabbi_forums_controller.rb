@@ -23,6 +23,19 @@ class WasabbiForumsController < ApplicationController
       if params[:id]
         @wasabbi_forum = WasabbiForum.find(params[:id])
 
+        if @wasabbi_forum.is_postable?
+          page = params[:page] || 1
+          items_per_page = session[:items_per_page] || 20
+          total_items = @wasabbi_forum.thread_count
+
+          @show_threads = Wasabbi::Page.new(
+            @wasabbi_forum.page_of_threads(page,items_per_page),
+            total_items,
+            page,
+            items_per_page
+          )
+        end
+
         respond_to do |format|
           format.html # show.html.erb
           format.xml  { render :xml => @wasabbi_forum }

@@ -7,23 +7,24 @@
   :locals => {:forum => forum} %>
 
 <% if wasabbi_admin? forum %>
-  <br/>
-  <%= link_to "Create new forum under #{h forum.name}",
-    new_wasabbi_forum_path(:wasabbi_forum => {
-      :parent_id => forum.id
-    }) %> <br/>
-  <% if wasabbi_admin? %>
-    <%= link_to "Create new top level forum",
-      new_wasabbi_forum_path %> <br/>
-  <% end %>
+  <div class ="w_forum_admin_controls">
+    <%= link_to "Create new forum under #{h forum.name}",
+      new_wasabbi_forum_path(:wasabbi_forum => {
+        :parent_id => forum.id
+      }) %> <br/>
+    <% if wasabbi_admin? %>
+      <%= link_to "Create new top level forum",
+        new_wasabbi_forum_path %> <br/>
+    <% end %>
 
-  <br/>
-  <%= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
-  <% if forum && forum.parent_id %>
-    <%= link_to 'Up', wasabbi_forum_path(forum.parent_id) %> |
-  <% end %>
-  <%= link_to "Destroy this forum (#{h forum.name})", forum,
-    :confirm => 'Are you sure?', :method => :delete %><br/>
+    <br/>
+    <%= link_to 'Edit', edit_wasabbi_forum_path(forum) %> |
+    <% if forum && forum.parent_id %>
+      <%= link_to 'Up', wasabbi_forum_path(forum.parent_id) %> |
+    <% end %>
+    <%= link_to "Destroy this forum (#{h forum.name})", forum,
+      :confirm => 'Are you sure?', :method => :delete %>
+  </div>
 <% end %>
 
 <% thread_controls = proc do %>
@@ -44,20 +45,31 @@
     :locals => {:forum => f} %>
 <% end %>
 
-<% show_threads = forum.page_of_threads(@page, session[:items_per_page]) %>
-
-<% if show_threads.empty? %>
-  <div class="w_no_threads">No threads have been created in this forum yet.
-  To be the first to start a discussion,
-    <%= link_to "Click Here!", new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%>
-  </div>
-<% else %>
-  <% thread_table_tag do %>
-    <% show_threads.each do |tle| %>
-      <%= render :partial => "wasabbi_threads/show_thread_row",
-        :locals => {:thread => tle.thread,
-        :with_gap => (tle != show_threads.last)} %>
+<% if forum.is_postable? %>
+  <% if @show_threads.empty? %>
+    <div class="w_no_threads">No threads have been created in this forum yet.
+      To be the first to start a discussion,
+      <%= link_to "Click Here!", new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%>
+    </div>
+  <% else %>
+    <% page_control = proc do  %>
+      <%= wasabbi_page_control @show_threads do |page|
+        wasabbi_forum_path(forum, :page => page)
+      end -%>
     <% end %>
+
+    <% page_control.call -%>
+
+    <% thread_table_tag do %>
+      <% @show_threads.each do |tle| %>
+        <%= render :partial => "wasabbi_threads/show_thread_row",
+          :locals => {:thread => tle.thread,
+          :with_gap => (tle != @show_threads.last)} %>
+      <% end %>
+    <% end %>
+
+    <% page_control.call -%>
+
   <% end %>
 <% end %>
 

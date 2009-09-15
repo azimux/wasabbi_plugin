@@ -1,0 +1,41 @@
+<%
+page = pages.page
+%>
+
+<% if pages.total_pages > 1 %>
+  <div class="w_pagination">
+    Page <b><%= page %></b> of <%= pages.total_pages %>. &nbsp;&nbsp;&nbsp;&nbsp;
+
+    <% if page != 1 %>
+      <%= link_to(h("<<First"), url_maker.call(1)) %>
+
+      <%= link_to(h("<Prev"), url_maker.call(page - 1)) %>
+    <% end %>
+
+    <% start = [page - 4, 1].max
+    start.upto([start + 4,page - 1].min) do |i| %>
+
+      <%= link_to(i.to_s, url_maker.call(i)) %>
+
+    <% end %>
+
+    &nbsp;&nbsp;<b><%= page %></b>&nbsp;&nbsp;
+
+    <% start = page + 1
+    start.upto([pages.total_pages, page + 4].min) do |i|  %>
+
+      <%= link_to(i.to_s, url_maker.call(i)) %>
+
+    <% end %>
+
+    <% if pages.total_pages != page %>
+      <%= link_to(h("Next>"), url_maker.call(page + 1)) %>
+
+      <%= link_to(h("Last>>"), url_maker.call(pages.total_pages)) %>
+    <% end %>
+  </div>
+<% end %>
+
+
+
+

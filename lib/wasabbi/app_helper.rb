@@ -96,6 +96,11 @@ class Wasabbi
       @wasabbi_wasabbi_user
     end
 
+    def wasabbi_page_control pages, &block
+      render :partial => "wasabbi_pages/pagination",
+        :locals => {:pages => pages, :url_maker => block}
+    end
+
     private
     def wasabbi_skip_check? if_public, if_private, if_owner
       forum_id = wasabbi_determine_forum_id
@@ -206,6 +211,7 @@ class Wasabbi
           end
         end
       end
+
     end
   end
 end
