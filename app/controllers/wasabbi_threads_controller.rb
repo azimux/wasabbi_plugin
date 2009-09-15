@@ -25,7 +25,17 @@ class WasabbiThreadsController < ApplicationController
   def show
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
-      @page_of_posts = @wasabbi_thread.page_of_posts(params[:page] || 1)
+      
+      page = params[:page] || 1
+      items_per_page = session[:items_per_page] || 20
+      total_items = @wasabbi_thread.post_count
+
+      @page_of_posts = Wasabbi::Page.new(
+        @wasabbi_thread.page_of_posts(page,items_per_page),
+        total_items,
+        page,
+        items_per_page
+      )
 
       host = Socket.getaddrinfo(request.remote_ip, nil).last[2]
 
@@ -112,7 +122,7 @@ class WasabbiThreadsController < ApplicationController
             :wasabbi_user_id => @wasabbi_thread.wasabbi_user_id
           )
 
-          flash[:notice] = 'WasabbiThread was successfully created.'
+          flash[:notice] = 'New thread successfully created.'
           format.html { redirect_to(@wasabbi_thread) }
           format.xml  { render :xml => @wasabbi_thread, :status => :created, :location => @wasabbi_thread }
         else
@@ -132,7 +142,7 @@ class WasabbiThreadsController < ApplicationController
 
       respond_to do |format|
         if @wasabbi_thread.update_attributes(params[:wasabbi_thread])
-          flash[:notice] = 'WasabbiThread was successfully updated.'
+          flash[:notice] = 'Your thread was successfully edited.'
           format.html { redirect_to(@wasabbi_thread) }
           format.xml  { head :ok }
         else

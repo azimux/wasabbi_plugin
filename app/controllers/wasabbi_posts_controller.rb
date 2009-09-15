@@ -84,7 +84,7 @@ class WasabbiPostsController < ApplicationController
 
       respond_to do |format|
         if @wasabbi_post.save && wasabbi_user.save && @wasabbi_post.thread.recalc_replies!
-          flash[:notice] = 'WasabbiPost was successfully created.'
+          flash[:notice] = 'New post was successfully created.'
           format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread, :post_id => @wasabbi_post.id)) }
           #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
         else
@@ -121,7 +121,7 @@ class WasabbiPostsController < ApplicationController
 
       respond_to do |format|
         if @wasabbi_post.update_attributes(params[:wasabbi_post])
-          flash[:notice] = 'WasabbiPost was successfully updated.'
+          flash[:notice] = 'Your post was successfully edited.'
           format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread,
                 :post_id => @wasabbi_post.id)) }
           #format.xml  { head :ok }

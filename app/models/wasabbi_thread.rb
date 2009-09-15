@@ -62,8 +62,13 @@ class WasabbiThread < ActiveRecord::Base
 
   def page_of_posts(page, per = nil)
     per ||= forum.posts_per_page
+    page = page.to_i
 
     posts.find(:all, :limit => per,
       :offset => (page - 1) * per)
+  end
+
+  def post_count
+    posts.count
   end
 end

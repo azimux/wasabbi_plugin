@@ -12,6 +12,14 @@
   </div>
 <% end %>
 
+<% page_control = proc do  %>
+  <%= wasabbi_page_control @page_of_posts do |page|
+    wasabbi_thread_path(@wasabbi_thread, :page => page)
+  end -%>
+<% end %>
+
+<% page_control.call -%>
+
 <%= yield :forum_buttons -%>
 
 <% @page_of_posts.each do |post| %>
@@ -19,6 +27,8 @@
 <% end %>
 
 <%= yield :forum_buttons -%>
+
+<% page_control.call -%>
 
 <div>
   <%= link_to 'Edit', edit_wasabbi_thread_path(@wasabbi_thread) %> |
