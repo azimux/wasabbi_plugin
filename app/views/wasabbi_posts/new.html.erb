@@ -1,5 +1,12 @@
 <h1>New wasabbi_post</h1>
 
+<% if params[:commit] =~ /preview/i -%>
+  Preveiw: 
+  <%= render :partial => "wasabbi_posts/show_one",
+    :locals => { :post => @wasabbi_post }
+  -%>
+<% end %>
+
 <% form_for(@wasabbi_post) do |f| %>
   <%= f.error_messages %>
 
@@ -14,6 +21,7 @@
   <%= f.hidden_field :thread_id %>
   <p>
     <%= f.submit "Submit" %>
+    <%= f.submit "Preview" %>
   </p>
 <% end %>
 

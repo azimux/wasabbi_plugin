@@ -1,7 +1,8 @@
 <% author = post.wasabbi_user
+preview ||= post.new_record?
 require 'bb-ruby' %>
 
-<div class="w_post">
+<div class="w_post" id="<%= post.id -%>">
   <div class="w_post_author_g">
     <div class="w_post_author_res">
       <%= link_to h(author.username), wasabbi_user_path(author) -%>
@@ -18,19 +19,22 @@ require 'bb-ruby' %>
     </div>
   </div><div class="w_post_content">
     <div class="w_post_content_header">
-      Posted: <%= post.created_at -%>
+      <% if !preview -%>
+        Posted: <%= post.created_at -%>
+      <% end %>
       Post Subject: <%= h(post.subject) -%>
-
     </div>
     <div class="w_post_buttons">
-      <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
-        :quote => post.id)
-      -%>
-      <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
-        <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
+      <% if !preview %>
+        <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
+          :quote => post.id)
+        -%>
+        <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
+          <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
 
-        <%= wasabbi_button "Delete", wasabbi_post_path(post),
-          :confirm => 'Are you sure?', :method => :delete -%>
+          <%= wasabbi_button "Delete", wasabbi_post_path(post),
+            :confirm => 'Are you sure?', :method => :delete -%>
+        <% end %>
       <% end %>
     </div>
 

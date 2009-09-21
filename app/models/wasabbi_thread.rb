@@ -11,6 +11,10 @@ class WasabbiThread < ActiveRecord::Base
 
   attr_accessible :subject, :body
 
+  def posts_in_front_of(post)
+    posts.count(:conditions => ["created_at < ?", post.created_at])
+  end
+
   def bump!
     self.bumped_at = Time.now
     save!

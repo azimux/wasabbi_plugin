@@ -25,53 +25,70 @@ class WasabbiThreadsController < ApplicationController
   def show
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
-      
-      page = params[:page] || 1
+
+      page = (params[:page] || 1).to_i
       items_per_page = session[:items_per_page] || 20
       total_items = @wasabbi_thread.post_count
 
-      @page_of_posts = Wasabbi::Page.new(
-        @wasabbi_thread.page_of_posts(page,items_per_page),
-        total_items,
-        page,
-        items_per_page
-      )
+      if params[:post_id]
+        post = WasabbiPost.find(params[:post_id])
 
-      host = Socket.getaddrinfo(request.remote_ip, nil).last[2]
-
-      masks = [
-        /googlebot.com$/,
-        /cuill.com$/,
-      ]
-
-      unless masks.map {|p| host =~ p}.any?
-        ref = request.env['HTTP_REFERER']
-        path = nil
-
-        if !ref.nil?
-          begin
-            path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path, :method => :get)
-          rescue URI::InvalidURIError, ActionController::RoutingError
-          rescue Exception => e
-            puts e
-            raise e
-          end
-        end
-
-        if path.nil? || path[:controller] != controller_name
-          #=~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
-          @wasabbi_thread.views += 1
-          @wasabbi_thread.save!
+        raise "no such post in this thread" if post.thread != @wasabbi_thread
+        
+        item_page = (@wasabbi_thread.posts_in_front_of(post) / items_per_page) + 1
+        
+        if item_page != page
+          wrong_page = true
+          redirect_to wasabbi_thread_url(@wasabbi_thread,
+            :page => item_page,
+            :anchor => params[:post_id])
         end
       end
 
-      #      request.remote_ip
-      #      page_hit.ref = request.env['HTTP_REFERER']
-      #      page_hit.host = request.env['HTTP_HOST']
+      if !wrong_page
+        @page_of_posts = Wasabbi::Page.new(
+          @wasabbi_thread.page_of_posts(page,items_per_page),
+          total_items,
+          page,
+          items_per_page
+        )
 
-      respond_to do |format|
-        format.html # show.html.erb
-        #format.xml  { render :xml => @wasabbi_thread }
+        host = Socket.getaddrinfo(request.remote_ip, nil).last[2]
+
+        masks = [
+          /googlebot.com$/,
+          /cuill.com$/,
+        ]
+
+        unless masks.map {|p| host =~ p}.any?
+          ref = request.env['HTTP_REFERER']
+          path = nil
+
+          if !ref.nil?
+            begin
+              path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path, :method => :get)
+            rescue URI::InvalidURIError, ActionController::RoutingError
+            rescue Exception => e
+              puts e
+              raise e
+            end
+          end
+
+          if path.nil? || path[:controller] != controller_name
+            #=~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
+            @wasabbi_thread.views += 1
+            @wasabbi_thread.save!
+          end
+        end
+
+        #      request.remote_ip
+        #      page_hit.ref = request.env['HTTP_REFERER']
+        #      page_hit.host = request.env['HTTP_HOST']
+
+        respond_to do |format|
+          format.html # show.html.erb
+          #format.xml  { render :xml => @wasabbi_thread }
+        end
       end
     end
   end

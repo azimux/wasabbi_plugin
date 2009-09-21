@@ -80,18 +80,26 @@ class WasabbiPostsController < ApplicationController
     WasabbiPost.transaction do
       @wasabbi_post = WasabbiPost.new(params[:wasabbi_post])
       @wasabbi_post.wasabbi_user = wasabbi_user
-      wasabbi_user.post_count = wasabbi_user.post_count + 1
 
-      respond_to do |format|
-        if @wasabbi_post.save && wasabbi_user.save && @wasabbi_post.thread.recalc_replies!
-          flash[:notice] = 'New post was successfully created.'
-          format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread, :post_id => @wasabbi_post.id)) }
-          #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
-        else
-          rollback_db_transaction
-          format.html { render :action => "new" }
-          #format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+      if params[:commit] !~ /preview/i
+        wasabbi_user.post_count = wasabbi_user.post_count + 1
+
+        respond_to do |format|
+          if @wasabbi_post.save && wasabbi_user.save && @wasabbi_post.thread.recalc_replies!
+            flash[:notice] = 'New post was successfully created.'
+            format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread,
+                  :post_id => @wasabbi_post.id,
+                  :anchor => @wasabbi_post.id)) }
+            #format.xml  { render :xml => @wasabbi_post, :status => :created, :location => @wasabbi_post }
+          else
+            rollback_db_transaction
+            format.html { render :action => "new" }
+            #format.xml  { render :xml => @wasabbi_post.errors, :status => :unprocessable_entity }
+          end
         end
+      else
+
+        render :action => "new"
       end
     end
   end
@@ -123,7 +131,8 @@ class WasabbiPostsController < ApplicationController
         if @wasabbi_post.update_attributes(params[:wasabbi_post])
           flash[:notice] = 'Your post was successfully edited.'
           format.html { redirect_to(wasabbi_thread_url(@wasabbi_post.thread,
-                :post_id => @wasabbi_post.id)) }
+                :post_id => @wasabbi_post.id,
+                :anchor => @wasabbi_post.id)) }
           #format.xml  { head :ok }
         else
           rollback_db_transaction
@@ -140,6 +149,7 @@ class WasabbiPostsController < ApplicationController
     WasabbiPost.transaction do
       @wasabbi_post = WasabbiPost.find(params[:id])
       thread = @wasabbi_post.thread
+      forum = thread.forum
 
       if thread.last_post != @wasabbi_post
         redirect_to(wasabbi_not_last_url(:post_id => @wasabbi_post.id))
@@ -150,10 +160,18 @@ class WasabbiPostsController < ApplicationController
         if thread.posts(true).count == 0
           thread.thread_list_entries.destroy_all
           thread.destroy
+          url = wasabbi_forum_url(forum)
         end
 
         respond_to do |format|
-          format.html { redirect_to(wasabbi_thread_url(thread, :post_id => @wasabbi_post.id)) }
+          if !url
+            post = thread.posts.last
+            url = wasabbi_thread_url(thread,
+              :post_id => post.id,
+              :anchor => post.id)
+          end
+
+          format.html { redirect_to(url) }
           #format.xml  { head :ok }
         end
       end
