@@ -3,6 +3,17 @@ class WasabbiForumsController < ApplicationController
   wasabbi_require_admin :except => [:show,:top]
   wasabbi_check_membership :except => [:top]
 
+  layout :determine_layout
+
+  def determine_layout
+    layout_proc = Wasabbi.layout_procs[controller_name]
+    if layout_proc
+      layout_proc.call self
+    else
+      true
+    end
+  end
+
   # GET /forums
   # GET /forums.xml
   def index
@@ -130,7 +141,8 @@ class WasabbiForumsController < ApplicationController
       parent = @wasabbi_forum.parent
 
       @wasabbi_forum.string_options.clear
-      @wasabbi_forum.thread_list_entries.each {|tle| tle.destroy}
+      @wasabbi_forum.thread_list_entries.each(&:destroy)
+      @wasabbi_forum.direct_threads.each(&:destroy)
       [@wasabbi_forum.modships, @wasabbi_forum.adminships].flatten.compact.each {|ma| ma.destroy}
       @wasabbi_forum.destroy
 

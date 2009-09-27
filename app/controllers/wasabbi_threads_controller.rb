@@ -176,9 +176,9 @@ class WasabbiThreadsController < ApplicationController
     WasabbiThread.transaction do
       @wasabbi_thread = WasabbiThread.find(params[:id])
 
-      if @wasabbi_thread.posts.size == 1
+      if @wasabbi_thread.posts.size == 1 || wasabbi_user.mod?(@wasabbi_thread.forum)
         @wasabbi_thread.thread_list_entries.each {|tle|tle.destroy}
-        @wasabbi_thread.posts.first.destroy
+        @wasabbi_thread.posts.destroy_all
         @wasabbi_thread.destroy
 
         respond_to do |format|

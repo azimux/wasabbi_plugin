@@ -11,6 +11,10 @@ class WasabbiThread < ActiveRecord::Base
 
   attr_accessible :subject, :body
 
+  def before_destroy
+    posts.destroy_all
+  end
+
   def posts_in_front_of(post)
     posts.count(:conditions => ["created_at < ?", post.created_at])
   end

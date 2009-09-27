@@ -15,4 +15,9 @@ class Wasabbi
   def self.path_prefix
     @path_prefix || 'wasaBBi'
   end
+
+
+  def self.layout_procs
+    @layout_procs ||= {}
+  end
 end
