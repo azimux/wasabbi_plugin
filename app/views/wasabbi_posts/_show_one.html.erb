@@ -19,10 +19,11 @@ require 'bb-ruby' %>
     </div>
   </div><div class="w_post_content">
     <div class="w_post_content_header">
+      Subject: <%= h(post.subject) -%><br/>
       <% if !preview -%>
-        Posted: <%= post.created_at -%>
+        <small>Posted: <%= post.created_at -%></small>
       <% end %>
-      Post Subject: <%= h(post.subject) -%>
+      <hr/>
     </div>
     <div class="w_post_buttons">
       <% if !preview %>

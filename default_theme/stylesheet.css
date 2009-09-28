@@ -7,6 +7,8 @@
 .w_crumbs {
     padding: 4px;
     margin: 6px;
+    clear: both;
+    margin-top: 20px;
 }
 
 .w_forum_admin_controls {
@@ -26,6 +28,17 @@
 }
 
 .w_thread_buttons {
+}
+
+.w_thread_controls {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.w_no_threads {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-left: 10px;
 }
 
 .w_post {

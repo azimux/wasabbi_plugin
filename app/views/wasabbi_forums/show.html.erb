@@ -1,7 +1,7 @@
 <% forum = @wasabbi_forum %>
 
 <%= render :partial => "wasabbi_forums/crumbs",
-  :locals => {:forum => @wasabbi_forum} %><br/>
+  :locals => {:forum => @wasabbi_forum} %>
 
 <%= render :partial => "wasabbi_forums/forum_name",
   :locals => {:forum => forum} %>
@@ -28,10 +28,12 @@
 <% end %>
 
 <% thread_controls = proc do %>
-  <% if forum.postable? %>
-    <%= wasabbi_button "New Thread",
-      new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%><br/>
-  <% end %>
+  <div class="w_thread_controls">
+    <% if forum.postable? %>
+      <%= wasabbi_button "New Thread",
+        new_wasabbi_thread_path(:wasabbi_thread => {:forum_id => forum.id}) -%>
+    <% end %>
+  </div>
 <% end %>
 
 <% thread_controls.call %>

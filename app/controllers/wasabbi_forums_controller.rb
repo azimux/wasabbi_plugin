@@ -3,14 +3,12 @@ class WasabbiForumsController < ApplicationController
   wasabbi_require_admin :except => [:show,:top]
   wasabbi_check_membership :except => [:top]
 
-  layout :determine_layout
 
-  def determine_layout
-    layout_proc = Wasabbi.layout_procs[controller_name]
-    if layout_proc
-      layout_proc.call self
-    else
-      true
+  if Wasabbi.layout_procs[controller_name]
+    layout :determine_layout
+
+    def determine_layout
+      Wasabbi.layout_procs[controller_name].call self
     end
   end
 
