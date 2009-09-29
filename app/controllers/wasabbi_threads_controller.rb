@@ -6,6 +6,8 @@ class WasabbiThreadsController < ApplicationController
     :if_owner => {:except => [:edit, :destroy, :update]}
   wasabbi_check_membership
 
+  include Wasabbi::DetermineLayout
+
   # GET /wasabbi_threads
   # GET /wasabbi_threads.xml
   def index
@@ -34,9 +36,9 @@ class WasabbiThreadsController < ApplicationController
         post = WasabbiPost.find(params[:post_id])
 
         raise "no such post in this thread" if post.thread != @wasabbi_thread
-        
+
         item_page = (@wasabbi_thread.posts_in_front_of(post) / items_per_page) + 1
-        
+
         if item_page != page
           wrong_page = true
           redirect_to wasabbi_thread_url(@wasabbi_thread,

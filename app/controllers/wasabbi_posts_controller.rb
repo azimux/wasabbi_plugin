@@ -4,6 +4,8 @@ class WasabbiPostsController < ApplicationController
     :if_owner => {:except => [:edit, :destroy, :update]}
   wasabbi_check_membership
 
+  include Wasabbi::DetermineLayout
+
   # GET /wasabbi_posts
   # GET /wasabbi_posts.xml
   def index
