@@ -59,6 +59,13 @@ class WasabbiUser < ActiveRecord::Base
     return true if admin? forum_id
     return true if modships.map(&:is_super_mod).any?
 
+    forum = nil
+
+    if forum_id.is_a?(WasabbiForum)
+      forum = forum_id
+      forum_id = forum_id.id
+    end
+
     if forum_id
       forum_id = forum_id.to_i
 
@@ -67,7 +74,7 @@ class WasabbiUser < ActiveRecord::Base
       if mods.map(&:forum_id).map(&:to_i).include?(forum_id)
         return true
       else
-        forum = WasabbiForum.find(forum_id)
+        forum ||= WasabbiForum.find(forum_id)
 
         forum.inherits_mods? && forum.parent &&
           mod?(forum.parent.id, true)
