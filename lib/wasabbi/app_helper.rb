@@ -8,6 +8,10 @@ class Wasabbi
       wasabbi_user && wasabbi_user.admin?(forum)
     end
 
+    def wasabbi_mod? forum = nil
+      wasabbi_user && wasabbi_user.mod?(forum)
+    end
+
     def wasabbi_owner?
       my_id = wasabbi_user.id
       if my_id && params[:id]

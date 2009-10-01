@@ -30,6 +30,8 @@
 
 <% page_control.call -%>
 
-<div class="w_forum_admin_controls">
-  <%= link_to 'Edit', edit_wasabbi_thread_path(@wasabbi_thread) -%>
-</div>
+<% if wasabbi_mod? @wasabbi_thread %>
+  <div class="w_forum_admin_controls">
+    <%= link_to 'Edit', edit_wasabbi_thread_path(@wasabbi_thread) -%>
+  </div>
+<% end %>
