@@ -4,7 +4,7 @@ class WasabbiFileController < ApplicationController
   def send_file_data
     file_parts = params[:file_parts]
     if !file_parts
-      raise render :file => "#{RAILS_ROOT}/public/404.html", :layout => false, :status => 404
+      raise render(:file => "#{RAILS_ROOT}/public/404.html", :layout => false, :status => 404)
     end
 
     path = File.join [RAILS_ROOT] +
