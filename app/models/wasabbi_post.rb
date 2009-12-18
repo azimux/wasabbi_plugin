@@ -38,6 +38,6 @@ class WasabbiPost < ActiveRecord::Base
   end
 
   def to_forum
-    forum
+    thread.to_forum
   end
 end

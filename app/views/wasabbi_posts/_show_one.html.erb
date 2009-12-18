@@ -30,7 +30,8 @@ require 'bb-ruby' %>
         <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
           :quote => post.id)
         -%>
-        <% if wasabbi_user && wasabbi_user.id == post.wasabbi_user.id %>
+        <% if wasabbi_user && (wasabbi_user.id == post.wasabbi_user.id ||
+              wasabbi_mod?(post)) %>
           <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
 
           <%= wasabbi_button "Delete", wasabbi_post_path(post),
