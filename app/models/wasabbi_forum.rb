@@ -132,4 +132,8 @@ class WasabbiForum < ActiveRecord::Base
       end
     end
   end
+
+  def to_forum
+    self
+  end
 end

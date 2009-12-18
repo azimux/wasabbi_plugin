@@ -79,4 +79,8 @@ class WasabbiThread < ActiveRecord::Base
   def post_count
     posts.count
   end
+
+  def to_forum
+    forum
+  end
 end

@@ -21,26 +21,17 @@ class WasabbiUser < ActiveRecord::Base
     adminships.select(&:is_subforum_admin)
   end
 
-  def admin? forum_id = nil, only_subs = false
+  def admin? forum_like = nil, only_subs = false
     return true if super_admin?
 
-    forum = nil
-
-    if forum_id.is_a? WasabbiForum
-      forum = forum_id
-      forum_id = forum_id.id
-    end
-
-    if forum_id
-      forum_id = forum_id.to_i
+    if forum_like
+      forum = forum_like.to_forum
 
       admins = only_subs ? subforum_adminships : adminships
 
-      if admins.map(&:forum_id).map(&:to_i).include?(forum_id)
+      if admins.map(&:forum_id).map(&:to_i).include?(forum.id)
         return true
       else
-        forum ||= WasabbiForum.find(forum_id)
-
         forum.inherits_admins? && forum.parent &&
           admin?(forum.parent, true)
       end
@@ -55,27 +46,20 @@ class WasabbiUser < ActiveRecord::Base
     modships.select(&:is_subforum_mod)
   end
 
-  def mod? forum_id = nil, only_subs = false
-    return true if admin? forum_id
+  def mod? forum_like = nil, only_subs = false
+    return true if super_admin?
     return true if modships.map(&:is_super_mod).any?
 
-    forum = nil
+    if forum_like
+      forum = forum_like.to_forum
 
-    if forum_id.is_a?(WasabbiForum)
-      forum = forum_id
-      forum_id = forum_id.id
-    end
-
-    if forum_id
-      forum_id = forum_id.to_i
+      return true if admin? forum
 
       mods = only_subs ? subforum_modships : modships
 
-      if mods.map(&:forum_id).map(&:to_i).include?(forum_id)
+      if mods.map(&:forum_id).map(&:to_i).include?(forum.id)
         return true
       else
-        forum ||= WasabbiForum.find(forum_id)
-
         forum.inherits_mods? && forum.parent &&
           mod?(forum.parent.id, true)
       end

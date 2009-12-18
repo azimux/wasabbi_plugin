@@ -36,4 +36,8 @@ class WasabbiPost < ActiveRecord::Base
   def modified?
     total_modifications > 0
   end
+
+  def to_forum
+    forum
+  end
 end
