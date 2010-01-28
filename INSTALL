@@ -94,7 +94,7 @@ Here's an example of what such a method might look like:
 
     def wasabbi_check_authentication
       if !session[:user]
-        redirect_to :controller => "user", :action => "signin"
+        redirect_to login_url
       end
     end
 
