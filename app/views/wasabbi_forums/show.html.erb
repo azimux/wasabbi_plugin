@@ -62,7 +62,7 @@
 
     <% page_control.call -%>
 
-    <% thread_table_tag do %>
+    <%= thread_table_tag do %>
       <% @show_threads.each do |tle| %>
         <%= render :partial => "wasabbi_threads/show_thread_row",
           :locals => {:thread => tle.thread,
