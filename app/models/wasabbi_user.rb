@@ -1,5 +1,7 @@
 class WasabbiUser < ActiveRecord::Base
-  belongs_to :user, :class_name => Wasabbi.user_class.name
+  #moved to Wasabbi module due to initialization ordering
+  #issues.
+  #belongs_to :user, :class_name => Wasabbi.user_class.name
   has_many :adminships, :class_name => "WasabbiAdminship"
   has_many :modships, :class_name => "WasabbiModship"
   has_and_belongs_to_many :memberships,

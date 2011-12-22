@@ -17,13 +17,13 @@ Rails.application.routes.draw do
   end
 
   scope :controller => "wasabbi_static" do
-    get "wasabbi_static/denied_admin" => "denied_admin",
+    get "wasabbi_static/denied_admin" => :denied_admin,
       :as => :wasabbi_denied_admin
-    get "wasabbi_static/denied_mod" => "denied_mod",
+    get "wasabbi_static/denied_mod" => :denied_mod,
       :as => :wasabbi_denied_mod
-    get "wasabbi_static/denied_member" => "denied_member",
+    get "wasabbi_static/denied_member" => :denied_member,
       :as => :wasabbi_denied_member
-    get "wasabbi_static/cant_delete_not_last" => "cant_delete_not_last",
+    get "wasabbi_static/cant_delete_not_last" => :cant_delete_not_last,
       :as => :wasabbi_not_last
   end
 
