@@ -22,7 +22,7 @@ class WasabbiTheme
   end
 
   def theme_url
-    "/vendor/plugins/wasabbi_plugin/#{theme_path_parts.join("/")}"
+    "/wasabbi_file/#{theme_path_parts.join("/")}"
   end
 
   def image_exists? image

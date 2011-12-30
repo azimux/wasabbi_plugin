@@ -1,17 +1,27 @@
 class WasabbiFileController < ApplicationController
 
-
   def send_file_data
     file_parts = params[:file_parts]
+    if file_parts.is_a? String
+      file_parts = file_parts.split "/"
+    end
+
     if !file_parts
       raise render(:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404)
     end
 
-    path = File.join [Rails.root] +
-      %w(vendor plugins wasabbi_plugin) +
-      file_parts
+    path = File.join(Rails.root,
+      "vendor", "plugins", "wasabbi_plugin", "public", *file_parts)
 
-    extension = /\.([^.]*)$/.match(file_parts.last)[1]
+    file_name, extension = if file_parts.last =~ /\.([^.]*)$/
+      [file_parts.last, $1]
+    else
+      [[file_parts.last, params[:format]].join("."), params[:format]]
+    end
+
+    path.gsub!(/\.([^.]*)$/, "")
+
+    path = [path, extension].join(".")
 
     unless %w(css).include?(extension)
       raise "bad extension: #{extension}"

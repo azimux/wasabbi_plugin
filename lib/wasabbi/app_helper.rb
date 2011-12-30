@@ -14,26 +14,18 @@ class Wasabbi
     end
 
     def thread_table_tag(&block)
-      concat("<table class='w_thread_table'>
-  <th>
-    Threads
-  </th>
-  <th>
-    Replies
-  </th>
-  <th>
-    Author
-  </th>
-  <th>
-    Views
-  </th>
-  <th>
-    Last Post
-  </th>
-  <tbody>
-    #{capture(&block)}
-  </tbody>
-</table>")
+      content_tag :table, :class => 'w_thread_table' do
+        safe_join([
+            content_tag(:th, "Threads"),
+            content_tag(:th, "Replies"),
+            content_tag(:th, "Author"),
+            content_tag(:th, "Views"),
+            content_tag(:th, "Last Post"),
+            content_tag(:tbody) do
+              capture(&block)
+            end
+          ])
+      end
     end
 
     def wasabbi_button name, url, image_path = nil, options = {}
@@ -53,9 +45,9 @@ class Wasabbi
         name
       end
 
-      "<span class='w_#{image_exists ? 'image' : 'text'}_button'>
-      #{link_to(link_text, url, options)}
-    </span>"
+      content_tag :span, :class => "w_#{image_exists ? 'image' : 'text'}_button" do
+        link_to(link_text, url, options)
+      end
     end
 
     def wasabbi_url

@@ -27,7 +27,7 @@ Rails.application.routes.draw do
       :as => :wasabbi_not_last
   end
 
-  get "vendor/plugins/wasabbi_plugin/*file_parts" =>
+  get "wasabbi_file/*file_parts" =>
     "wasabbi_file#send_file_data",
     :as => :wasabbi_file
 

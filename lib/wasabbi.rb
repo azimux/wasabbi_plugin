@@ -12,10 +12,10 @@ class Wasabbi
 
   cattr_accessor :user_class, :path_prefix
 
-  def self.user_class c
+  def self.user_class= c
     @user_class = c
-    WassabiUser.instance_eval do
-      belongs_to :user, :class_name => Wasabbi.user_class.name
+    WasabbiUser.class_eval do
+      belongs_to :user, :class_name => c.name
     end
   end
 

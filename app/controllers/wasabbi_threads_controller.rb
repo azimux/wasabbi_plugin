@@ -49,12 +49,15 @@ class WasabbiThreadsController < ApplicationController
 
       if !wrong_page
         @page_of_posts = Wasabbi::Page.new(
-          @wasabbi_thread.page_of_posts(page,items_per_page),
+          @wasabbi_thread.page_of_posts(page, items_per_page),
           total_items,
           page,
           items_per_page
         )
 
+        #let's see if we should increase the view count.
+        #don't increase it if it's a known bot.
+        #only increase it if the REFERER url is from this site.
         host = Socket.getaddrinfo(request.remote_ip, nil).last[2]
 
         masks = [
@@ -64,28 +67,29 @@ class WasabbiThreadsController < ApplicationController
 
         unless masks.map {|p| host =~ p}.any?
           ref = request.env['HTTP_REFERER']
-          path = nil
+          req = request.env['REQUEST_URI']
 
-          if !ref.nil?
+          if !ref.nil? && !req.nil?
             begin
-              path = ActionController::Routing::Routes.recognize_path(URI.parse(ref).path, :method => :get)
-            rescue URI::InvalidURIError, ActionController::RoutingError
-            rescue Exception => e
+              if URI.parse(ref).host == URI.parse(req).host
+                path = Rails.application.routes.recognize_path(
+                  URI.parse(ref).path,
+                  :method => :get
+                )
+
+                if path.nil? || path[:controller] != controller_name
+                  #=~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
+                  @wasabbi_thread.views += 1
+                  @wasabbi_thread.save!
+                end
+              end
+            rescue URI::InvalidURIError => e
               puts e
-              raise e
             end
           end
 
-          if path.nil? || path[:controller] != controller_name
-            #=~ /wasabbi_threads\/#{@wasabbi_thread.id}\s*([;\/&]|$)/
-            @wasabbi_thread.views += 1
-            @wasabbi_thread.save!
-          end
-        end
 
-        #      request.remote_ip
-        #      page_hit.ref = request.env['HTTP_REFERER']
-        #      page_hit.host = request.env['HTTP_HOST']
+        end
 
         respond_to do |format|
           format.html # show.html.erb
