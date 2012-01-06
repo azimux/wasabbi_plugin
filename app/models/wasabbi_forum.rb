@@ -1,13 +1,19 @@
 class WasabbiForum < ActiveRecord::Base
-  has_many :threads, :through => :thread_list_entries, :order => "bumped_at desc"
+  has_hash :string_options, :class_name => "WasabbiForumStringOption",
+    :foreign_key => :forum_id, :key_column => "name"
+
+  has_many :threads, :through => :thread_list_entries,
+    :order => "bumped_at desc"
   has_many :direct_threads, :class_name => "WasabbiThread",
     :foreign_key => "forum_id"
 
   has_many :thread_list_entries, :class_name => "WasabbiThreadListEntry",
     :foreign_key => "forum_id", :order => "bumped_at desc"
 
-  has_many :modships, :class_name => "WasabbiModship", :foreign_key => "forum_id"
-  has_many :adminships, :class_name => "WasabbiAdminship", :foreign_key => "forum_id"
+  has_many :modships, :class_name => "WasabbiModship",
+    :foreign_key => "forum_id"
+  has_many :adminships, :class_name => "WasabbiAdminship",
+    :foreign_key => "forum_id"
 
   has_and_belongs_to_many :direct_members,
     :class_name => "WasabbiUser",
@@ -18,9 +24,6 @@ class WasabbiForum < ActiveRecord::Base
     :foreign_key => "parent_id"
   belongs_to :parent, :class_name => "WasabbiForum"
 
-  has_hash :string_options, :class_name => "WasabbiForumStringOption",
-    :foreign_key => :forum_id, :key_column => "name"
-
   validates_associated :all_string_options
 
   def all_members
@@ -30,7 +33,8 @@ class WasabbiForum < ActiveRecord::Base
   def before_destroy
     string_options.clear
     direct_members.clear
-    [thread_list_entries,
+    [
+      thread_list_entries,
       modships,
       adminships,
     ].flatten.compact.each {|ma| ma.destroy}

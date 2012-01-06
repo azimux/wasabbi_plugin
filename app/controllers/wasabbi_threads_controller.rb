@@ -129,19 +129,15 @@ class WasabbiThreadsController < ApplicationController
       @wasabbi_thread.forum_id = forum_id
       @wasabbi_thread.wasabbi_user = wasabbi_user
       wasabbi_user.post_count += 1
-      @wasabbi_thread.bumped_at = Time.now
 
       respond_to do |format|
         if @wasabbi_thread.save && wasabbi_user.save
           WasabbiThreadListEntry.create!(:thread_id => @wasabbi_thread.id,
-            :forum_id => @wasabbi_thread.forum_id,
-            :bumped_at => @wasabbi_thread.bumped_at
+            :forum_id => @wasabbi_thread.forum_id
           )
           WasabbiPost.create!(:thread_id => @wasabbi_thread.id,
             :subject => @wasabbi_thread.subject,
             :body => @wasabbi_thread.body,
-            :created_at => @wasabbi_thread.bumped_at,
-            :updated_at => @wasabbi_thread.bumped_at,
             :wasabbi_user_id => @wasabbi_thread.wasabbi_user_id
           )
 

@@ -40,4 +40,9 @@ class WasabbiPost < ActiveRecord::Base
   def to_forum
     thread.to_forum
   end
+
+  after_create :bump_thread
+  def bump_thread
+    thread.bump!
+  end
 end
