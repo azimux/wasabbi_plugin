@@ -10,8 +10,11 @@ Rails.application.routes.draw do
       ["users", {:only => [:show]}],
       ["ranks"]
     ].each do |resource, options, block|
-      resources "wasabbi_#{resource}",
-        (options || {}),
+      resources resource,
+        (options || {}).merge(
+        :controller => "wasabbi_#{resource}",
+        :as => "wasabbi_#{resource}"
+      ),
         &(block || proc{})
     end
   end

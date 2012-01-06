@@ -153,7 +153,7 @@ class WasabbiPostsController < ApplicationController
       thread = @wasabbi_post.thread
       forum = thread.forum
 
-      if thread.last_post != @wasabbi_post
+      if thread.posts.last != @wasabbi_post
         redirect_to(wasabbi_not_last_url(:post_id => @wasabbi_post.id))
       else
         @wasabbi_post.destroy

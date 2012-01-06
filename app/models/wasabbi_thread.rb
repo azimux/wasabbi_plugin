@@ -63,11 +63,6 @@ class WasabbiThread < ActiveRecord::Base
     end
   end
 
-  def last_post
-    #WasabbiPost.find(:first, :conditions => ["thread_id = ?", id], :order => "created_at DESC")
-    posts.find(:first, :order => "created_at DESC")
-  end
-
   def page_of_posts(page, per = nil)
     per ||= forum.posts_per_page
     page = page.to_i

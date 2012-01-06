@@ -27,14 +27,14 @@ require 'bb-ruby' %>
     </div>
     <div class="w_post_buttons">
       <% if !preview %>
-        <%= wasabbi_button "Quote", new_wasabbi_post_url(:wasabbi_post => {:thread_id => post.thread_id},
+        <%= wasabbi_button "Quote", new_wasabbi_post_path(:wasabbi_post => {:thread_id => post.thread_id},
           :quote => post.id)
         -%>
         <% if wasabbi_user && (wasabbi_user.id == post.wasabbi_user.id ||
               wasabbi_mod?(post)) %>
-          <%=  wasabbi_button "Edit", edit_wasabbi_post_url(post) -%>
+          <%= wasabbi_button "Edit", edit_wasabbi_post_path(post) -%>
 
-          <%= wasabbi_button "Delete", wasabbi_post_path(post),
+          <%= wasabbi_button "Delete", post,
             :confirm => 'Are you sure?', :method => :delete -%>
         <% end %>
       <% end %>
@@ -44,7 +44,7 @@ require 'bb-ruby' %>
     </div>
 
     <div class="w_post_body">
-      <%= h(post.body).bbcode_to_html %>
+      <%= post.body.bbcode_to_html.html_safe %>
     </div>
 
     <% if author.has_signature? %>

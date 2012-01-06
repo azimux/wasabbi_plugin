@@ -17,8 +17,8 @@
 
   <td class="w_last">
     <%= h(thread.bumped_at) %><br/>
-    <%= link_to h(thread.last_post.wasabbi_user.username),
-      wasabbi_user_path(thread.last_post.wasabbi_user.username) %>
+    <%= link_to h(thread.posts.last.wasabbi_user.username),
+      wasabbi_user_path(thread.posts.last.wasabbi_user.username) %>
   </td>
 </tr>
 
