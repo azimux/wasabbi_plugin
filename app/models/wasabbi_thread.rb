@@ -11,6 +11,8 @@ class WasabbiThread < ActiveRecord::Base
 
   attr_accessible :subject, :body
 
+  before_create { self.bumped_at ||= Time.now }
+
   def before_destroy
     posts.destroy_all
   end
