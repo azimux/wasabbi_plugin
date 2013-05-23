@@ -51,7 +51,7 @@ if using your own model.
         user
       end
 
-      if !instance_methods.include?('wasabbi_check_authentication')
+      if !instance_methods.include?(:wasabbi_check_authentication)
         raise "WasaBBi's AppHelper not yet included"
       else
         def wasabbi_check_authentication

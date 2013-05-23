@@ -2,6 +2,7 @@ ActionController::Base.send(:include, ::Wasabbi::AppHelper)
 ActionView::Base.send(:include, ::Wasabbi::AppHelper)
 
 Find.find(File.join(File.dirname(__FILE__), "lib", "extensions")) do |p|
+  p = p.to_s
   require p if p =~ /\.rb$/ && p !~ /\.svn/
 end
 
