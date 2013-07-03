@@ -1,5 +1,5 @@
 class WasabbiThreadListEntry < ActiveRecord::Base
-  set_table_name :wasabbi_thread_list_entries
+  self.table_name = :wasabbi_thread_list_entries
   
   #acts_as_list :scope => :thread
   

@@ -10,8 +10,7 @@ class WasabbiFileController < ApplicationController
       raise render(:file => "#{Rails.root}/public/404.html", :layout => false, :status => 404)
     end
 
-    path = File.join(Rails.root,
-      "vendor", "plugins", "wasabbi_plugin", "public", *file_parts)
+    path = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "public", *file_parts))
 
     file_name, extension = if file_parts.last =~ /\.([^.]*)$/
       [file_parts.last, $1]
