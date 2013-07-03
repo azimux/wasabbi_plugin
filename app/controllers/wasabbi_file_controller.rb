@@ -12,13 +12,14 @@ class WasabbiFileController < ApplicationController
 
     path = File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "public", *file_parts))
 
-    file_name, extension = if file_parts.last =~ /\.([^.]*)$/
-      [file_parts.last, $1]
-    else
-      [[file_parts.last, params[:format]].join("."), params[:format]]
-    end
+    dot_extension = File.extname(file_parts.last)
+    extension = if dot_extension.empty?
+                  params[:format]
+                else
+                  dot_extension[1..-1]
+                end
 
-    path.gsub!(/\.([^.]*)$/, "")
+    path = path.chomp(dot_extension)
 
     path = [path, extension].join(".")
 
@@ -31,9 +32,9 @@ class WasabbiFileController < ApplicationController
     else
       File.open(path) do |f|
         send_data(f.read,
-          :filename => file_parts.last,
-          :type => "text/css", #XXX
-          :disposition => 'inline')
+                  :filename => file_parts.last,
+                  :type => "text/css", #XXX
+                  :disposition => 'inline')
       end
     end
   end
